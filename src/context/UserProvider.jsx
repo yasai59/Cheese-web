@@ -13,7 +13,7 @@ export const UserProvider = ({ children }) => {
   console.log({ user, token });
 
   useEffect(() => {
-    axios.defaults.baseURL = "http://localhost:3000";
+    axios.defaults.baseURL = "https://apicheese.yasai59.com";
   }, []);
 
   const login = async (user, password) => {
