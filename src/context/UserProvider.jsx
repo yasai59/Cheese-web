@@ -10,8 +10,6 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(localUser ? JSON.parse(localUser) : null);
   const [token, setToken] = useState(localStorage.getItem("token") ?? null);
 
-  console.log({ user, token });
-
   useEffect(() => {
     axios.defaults.baseURL = "https://apicheese.yasai59.com";
   }, []);
@@ -25,6 +23,9 @@ export const UserProvider = ({ children }) => {
 
       const { user: userRes } = res.data;
       const { token } = res.data;
+      if(!token)
+        return;
+      
       setUser(userRes);
       setToken(token);
 
@@ -34,8 +35,6 @@ export const UserProvider = ({ children }) => {
     } catch (err) {
       console.log(err);
     }
-
-    console.log(res.data);
   };
 
   return (
