@@ -11,3 +11,8 @@
   font-family: 'Anton';
   src: url('/fonts/Anton.ttf');
 }
+
+/* Checkbox Style */
+input[type="checkbox"] {
+  filter: invert(86%) hue-rotate(20deg) brightness(1.3);
+}
