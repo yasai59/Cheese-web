@@ -19,6 +19,10 @@ export default {
         "base-light": "#515451",
       },
     },
+    screens: {
+      'tablet': '670px', // => @media (min-width: 670px)
+      'laptop': '1024px' // => @media (min-width: 1024px)
+    }
   },
   plugins: [],
 };

@@ -11,11 +11,12 @@ export const UserProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") ?? null);
 
   useEffect(() => {
-    axios.defaults.baseURL = "https://apicheese.yasai59.com";
+    axios.defaults.baseURL = "http://localhost:3000";
   }, []);
 
   const login = async (username, password) => {
     try {
+      if(!username || !password) return "User and password are required."; 
       const res = await axios.post("/api/user/login", {
         username,
         password,
@@ -35,6 +36,7 @@ export const UserProvider = ({ children }) => {
 
     } catch (err) {
       console.log(err.response.data.message);
+      return err.response.data.message;
     }
   };
 

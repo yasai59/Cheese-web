@@ -13,19 +13,28 @@ export const LoginPage = () => {
 
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleLogin = (e) => {
     e.preventDefault();
-    login(user, password);
+    if (!user || !password) {
+      setError("User and password are required.");
+      return;
+    }
+    login(user, password).then((result) => {
+      setError(result);
+    }).catch((err) => {
+      setError(err.response.data.message);
+    });
   }
 
 
   return (
-    <main className="md:h-screen overflow-auto w-full flex sm:flex-col sm:justify-end sm:items-center md:justify-center text-6xl container mx-auto p-2 md:gap-10">
-      <h1 className="md:flex text-end md:justify-end hidden font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text p-4 md:p-0">
+    <main className="h-screen overflow-auto w-full flex flex-col justify-center items-center text-6xl container mx-auto p-2 md:gap-10">
+      <h1 className="hidden text-center tablet:flex font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text p-4 md:p-0">
         Discover a new experience
       </h1>
-      <section className="grid sm:grid-cols-1 md:grid-cols-2 items-center sm:overflow-auto lg:p-2">
+      <section className="grid grid-cols-1 items-center laptop:grid-cols-2 laptop:p-2">
         <img className="md:grid-cols-1" src="/assets/logoFull.png" alt="logo of the platorm" />
         <form className="md:grid-cols-1 flex flex-col gap-4 px-2 py-4" onSubmit={handleLogin}>
           <LoginGoogle title={"Login with Google"} className={"justify-center"} />
@@ -37,6 +46,7 @@ export const LoginPage = () => {
           <Input type={"text"} placeholder={"example@example.com"} value={user} setValue={setUser}/>
           <Input type={"password"} placeholder={"*******"} value={password} setValue={setPassword}/> 
           <FormButton title={"Log In"}  />
+          {error && <p className="text-red-500 text-base">{error}</p>}
           <div className="flex flex-col items-end justify-center text-primary text-sm gap-4">
             <Link to="/remember-password" className="underline">Can't remember your password?</Link>
             <Link to="/create-account" className="underline">Create an account</Link>
