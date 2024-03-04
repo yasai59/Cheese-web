@@ -17,10 +17,6 @@ export const LoginPage = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (!user || !password) {
-      setError("User and password are required.");
-      return;
-    }
     login(user, password).then((result) => {
       setError(result);
     }).catch((err) => {
@@ -30,13 +26,13 @@ export const LoginPage = () => {
 
 
   return (
-    <main className="h-screen overflow-auto w-full flex flex-col justify-center items-center text-6xl container mx-auto p-2 md:gap-10">
-      <h1 className="hidden text-center tablet:flex font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text p-4 md:p-0">
+    <main className="h-full tablet:h-screen w-full flex flex-col justify-center items-center laptop:items-end text-6xl container mx-auto p-2 md:gap-10">
+      <h1 className="hidden text-center laptop:flex font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text p-4 md:p-0">
         Discover a new experience
       </h1>
       <section className="grid grid-cols-1 items-center laptop:grid-cols-2 laptop:p-2">
-        <img className="md:grid-cols-1" src="/assets/logoFull.png" alt="logo of the platorm" />
-        <form className="md:grid-cols-1 flex flex-col gap-4 px-2 py-4" onSubmit={handleLogin}>
+        <img className="tablet:grid-cols-1" src="/assets/logoFull.png" alt="logo of the platorm" />
+        <form className="h-full justify-center tablet:grid-cols-1 flex flex-col gap-4 px-2 py-4" onSubmit={handleLogin}>
           <LoginGoogle title={"Login with Google"} className={"justify-center"} />
           <div className="flex items-center">
             <div className="bg-base-light flex-grow h-[1px]"></div>
