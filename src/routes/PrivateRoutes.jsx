@@ -7,12 +7,16 @@ import { FavoriteRestaurants } from "../pages/privatePages/FavoriteRestaurants";
 import { YourProfile } from "../pages/privatePages/YourProfile";
 import { NavBar } from "../components/NavBar";
 import { NavBarMobile } from "../components/NavBarMobile";
+import { HeaderMobile } from "../components/HeaderMobile";
 
 export const PrivateRoutes = () => {
   return (
     <div className="h-screen flex flex-col tablet:flex-row">
       <div className="hidden tablet:block">
         <NavBar />
+      </div>
+      <div className="block tablet:hidden">
+        <HeaderMobile />
       </div>
       <div className="flex-grow">
         <Routes>
