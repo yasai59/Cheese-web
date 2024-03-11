@@ -11,7 +11,7 @@ import { HeaderMobile } from "../components/HeaderMobile";
 
 export const PrivateRoutes = () => {
   return (
-    <div className="h-screen flex flex-col tablet:flex-row">
+    <div className="min-h-screen flex flex-col tablet:flex-row">
       <div className="hidden tablet:block">
         <NavBar />
       </div>
