@@ -13,7 +13,7 @@ export const NavBar = () => {
 
   return (
     <div className="h-full">
-      <nav className="h-full flex flex-col items-center bg-base-dark text-light border-r border-text-light p-4">
+      <nav className="h-full flex flex-col items-center bg-base-dark text-light border-r border-text-light p-4 w-64">
         <div className="flex justify-center items-center gap-4 h-20">
           <img
             className="w-10"

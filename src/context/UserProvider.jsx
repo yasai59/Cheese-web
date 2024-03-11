@@ -12,11 +12,12 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     axios.defaults.baseURL = "http://localhost:3000";
+    axios.defaults.headers.common["x-token"] = localStorage.getItem("token");
   }, []);
 
   const login = async (username, password) => {
     try {
-      if(!username || !password) return "User and password are required."; 
+      if (!username || !password) return "User and password are required.";
       const res = await axios.post("/api/user/login", {
         username,
         password,
@@ -24,16 +25,16 @@ export const UserProvider = ({ children }) => {
 
       const { user: userRes } = res.data;
       const { token } = res.data;
-      if (!token)
-        return;
+      if (!token) return;
 
       setUser(userRes);
       setToken(token);
 
+      axios.defaults.headers.common["x-token"] = token;
+
       localStorage.setItem("token", token);
 
       localStorage.setItem("user", JSON.stringify(userRes));
-
     } catch (err) {
       console.log(err.response.data.message);
       return err.response.data.message;
@@ -45,7 +46,7 @@ export const UserProvider = ({ children }) => {
     setToken(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-  }
+  };
 
   return (
     <UserContext.Provider value={{ user, login, token, logout }}>

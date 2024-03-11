@@ -1,5 +1,9 @@
 import React from "react";
 import { Pill } from "../../components/Pill";
+import { useEffect } from "react";
+import axios from "axios";
+import { useRef } from "react";
+import { useMemo } from "react";
 
 const Option = ({ title, content, onClick, type = "text", className }) => {
   return (
@@ -32,15 +36,36 @@ const Option = ({ title, content, onClick, type = "text", className }) => {
 };
 
 export const YourProfile = () => {
+  const image = useRef(null);
+
+  const getImage = async () => {
+    const res = await fetch(axios.defaults.baseURL + "/api/user/photo", {
+      headers: {
+        "x-token": localStorage.getItem("token"),
+      },
+    });
+    let blob = res.blob();
+    blob = await blob;
+    blob = new Blob([blob], { type: "image/png" });
+    const url = URL.createObjectURL(blob);
+    return url;
+  };
+
+  useEffect(() => {
+    getImage().then((url) => {
+      image.current.style.backgroundImage = `url(${url})`;
+    });
+  });
+
   return (
     <div className="w-full mx-auto flex flex-col">
       <h1 className="text-4xl text-light font-bold my-5 ms-5">Your Profile</h1>
       <div className="self-center my-5">
-        <img
+        <div className="w-28 h-28 rounded-full bg-cover" ref={image}></div>
+        {/* <img
           src="https://search.yasai59.com/element?url=gAAAAABl6Y76HBy4BZlvVq1vOoQED2mqSNAeU-ZkNrl149R4AgkRUWenTXKENO1dSoY0jQB64zLGqBrMAln-CZF2Y9bVEO4Oi3eqD3iq88mmrCFFvYk0JCnHIOMWGVu2nVp7RSqe8PVDITViAd3fQB3vpW1a_5MfQGIRFNXlLn3L_Hf4uKOXCZGvVlOswpZlk-DqO0eUBpAZED65j4t5msljP4L_GPZQ_4ptKxck3yZOyIRFCQDlxog=&type=image/png"
           alt=""
-          className="w-28 h-28 rounded-full"
-        />
+        /> */}
         <p className="text-light text-center mt-5">Username</p>
       </div>
       <section className="grid laptop:grid-cols-2">
