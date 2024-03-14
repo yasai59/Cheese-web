@@ -3,7 +3,8 @@ import { Pill } from "../../components/Pill";
 import { useEffect } from "react";
 import axios from "axios";
 import { useRef } from "react";
-import { useMemo } from "react";
+import { useContext } from "react";
+import UserContext from "../../context/UserContext";
 
 const Option = ({ title, content, onClick, type = "text", className }) => {
   return (
@@ -37,6 +38,11 @@ const Option = ({ title, content, onClick, type = "text", className }) => {
 
 export const YourProfile = () => {
   const image = useRef(null);
+  const { user, tastes, restrictions, logout } = useContext(UserContext);
+
+  console.log({ tastes, restrictions });
+
+  console.log(user);
 
   const getImage = async () => {
     const res = await fetch(axios.defaults.baseURL + "/api/user/photo", {
@@ -61,15 +67,11 @@ export const YourProfile = () => {
     <div className="w-full mx-auto flex flex-col">
       <h1 className="text-4xl text-light font-bold my-5 ms-5">Your Profile</h1>
       <div className="self-center my-5">
-        <div className="w-28 h-28 rounded-full bg-cover" ref={image}></div>
-        {/* <img
-          src="https://search.yasai59.com/element?url=gAAAAABl6Y76HBy4BZlvVq1vOoQED2mqSNAeU-ZkNrl149R4AgkRUWenTXKENO1dSoY0jQB64zLGqBrMAln-CZF2Y9bVEO4Oi3eqD3iq88mmrCFFvYk0JCnHIOMWGVu2nVp7RSqe8PVDITViAd3fQB3vpW1a_5MfQGIRFNXlLn3L_Hf4uKOXCZGvVlOswpZlk-DqO0eUBpAZED65j4t5msljP4L_GPZQ_4ptKxck3yZOyIRFCQDlxog=&type=image/png"
-          alt=""
-        /> */}
-        <p className="text-light text-center mt-5">Username</p>
+        <div className="w-36 h-36 rounded-full bg-cover" ref={image}></div>
+        <p className="text-light text-center mt-5 text-xl">{user.username}</p>
       </div>
       <section className="grid laptop:grid-cols-2">
-        <Option title="Email" content="email@email.com" type="text" />
+        <Option title="Email" content={user.email} type="text" />
         <Option
           title="Password"
           content="***************"
@@ -93,10 +95,18 @@ export const YourProfile = () => {
 
         <Option
           title="Restaurant lots"
-          content="10"
+          content={user.lot_number}
           type="text"
           onClick={() => alert("Restaurant lot")}
         />
+        <div className="tablet:hidden">
+          <Option
+            title="Log out"
+            content="Log out"
+            type="button"
+            onClick={logout}
+          />
+        </div>
         <div className="flex flex-col laptop:flex-row">
           <Option
             title="Change to Restaurant account"
@@ -113,19 +123,14 @@ export const YourProfile = () => {
             onClick={() => alert("delete account")}
           />
         </div>
+
         <div className="hidden laptop:grid row-start-1 row-end-3 col-start-2 ">
           <div className="m-5 bg-base rounded-xl p-3 flex flex-col">
             <h5 className="text-primary">Tastes</h5>
             <div className="flex flex-wrap gap-3 my-3">
-              <Pill text={"Example"} activate={true} />
-              <Pill text={"Example"} activate={true} />
-              <Pill text={"Example"} activate={true} />
-              <Pill text={"Example"} activate={true} />
-              <Pill text={"Example"} activate={true} />
-              <Pill text={"Example"} activate={true} />
-              <Pill text={"Example"} activate={true} />
-              <Pill text={"Example"} activate={true} />
-              <Pill text={"Example"} activate={true} />
+              {tastes.map((taste) => {
+                return <Pill text={taste.name} activate={true} />;
+              })}
             </div>
             <button
               onClick={() => alert("Tastes")}
@@ -135,23 +140,17 @@ export const YourProfile = () => {
             </button>
           </div>
         </div>
-        <div className="hidden laptop:grid row-start-3 row-end-5 col-start-2">
-          <div className="hidden laptop:grid row-start-1 row-end-3 col-start-2 ">
+        <div className="hidden laptop:grid row-start-3 row-end-5 col-start-2 w-full">
+          <div className="hidden laptop:grid row-start-1 row-end-3 col-start-1 ">
             <div className="m-5 bg-base rounded-xl p-3 flex flex-col">
-              <h5 className="text-primary">Tastes</h5>
+              <h5 className="text-primary">Restrictons</h5>
               <div className="flex flex-wrap gap-3 my-3">
-                <Pill text={"Example"} activate={true} />
-                <Pill text={"Example"} activate={true} />
-                <Pill text={"Example"} activate={true} />
-                <Pill text={"Example"} activate={true} />
-                <Pill text={"Example"} activate={true} />
-                <Pill text={"Example"} activate={true} />
-                <Pill text={"Example"} activate={true} />
-                <Pill text={"Example"} activate={true} />
-                <Pill text={"Example"} activate={true} />
+                {restrictions?.map((restriction) => {
+                  return <Pill text={restriction.name} activate={true} />;
+                })}
               </div>
               <button
-                onClick={() => alert("Tastes")}
+                onClick={() => alert("Restrictions")}
                 className="w-min self-end mr-5 bg-base-light text-light px-7 py-2 text-3xl rounded-lg h-min grid place-items-center"
               >
                 <span className="icon-[mdi--pencil-outline]"></span>

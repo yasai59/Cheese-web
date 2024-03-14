@@ -9,11 +9,20 @@ export const UserProvider = ({ children }) => {
 
   const [user, setUser] = useState(localUser ? JSON.parse(localUser) : null);
   const [token, setToken] = useState(localStorage.getItem("token") ?? null);
+  const [tastes, setTastes] = useState([]);
+  const [restrictions, setRestrictions] = useState([]);
 
   useEffect(() => {
     axios.defaults.baseURL = "http://localhost:3000";
     axios.defaults.headers.common["x-token"] = localStorage.getItem("token");
-  }, []);
+    axios.get("/api/taste").then((res) => {
+      setTastes(res.data.tastes);
+    });
+
+    axios.get("/api/restriction").then((res) => {
+      setRestrictions(res.data.restrictions);
+    });
+  }, [token]);
 
   const login = async (username, password) => {
     try {
@@ -49,7 +58,9 @@ export const UserProvider = ({ children }) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, login, token, logout }}>
+    <UserContext.Provider
+      value={{ user, login, token, logout, tastes, restrictions }}
+    >
       {children}
     </UserContext.Provider>
   );
