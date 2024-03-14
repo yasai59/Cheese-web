@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 import { addDynamicIconSelectors } from "@iconify/tailwind";
+import daisyui from "daisyui";
 
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -20,11 +21,15 @@ export default {
         "base-dark": "#202020",
         "base-light": "#515451",
       },
-    },
-    screens: {
-      tablet: "670px", // => @media (min-width: 670px)
-      laptop: "1024px", // => @media (min-width: 1024px)
+      screens: {
+        tablet: "670px", // => @media (min-width: 670px)
+        laptop: "1024px", // => @media (min-width: 1024px)
+      },
+      screens: {
+        tablet: "670px", // => @media (min-width: 670px)
+        laptop: "1024px", // => @media (min-width: 1024px)
+      },
     },
   },
-  plugins: [addDynamicIconSelectors()],
+  plugins: [addDynamicIconSelectors(), daisyui],
 };
