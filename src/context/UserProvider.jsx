@@ -11,6 +11,8 @@ export const UserProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") ?? null);
   const [tastes, setTastes] = useState([]);
   const [restrictions, setRestrictions] = useState([]);
+  const [allTastes, setAllTastes] = useState([]);
+  const [allRestrictions, setAllRestrictions] = useState([]);
 
   useEffect(() => {
     axios.defaults.baseURL = "http://localhost:3000";
@@ -21,6 +23,14 @@ export const UserProvider = ({ children }) => {
 
     axios.get("/api/restriction").then((res) => {
       setRestrictions(res.data.restrictions);
+    });
+
+    axios.get("/api/taste/all").then((res) => {
+      setAllTastes(res.data.tastes);
+    });
+
+    axios.get("/api/restriction/all").then((res) => {
+      setAllRestrictions(res.data.restrictions);
     });
   }, [token]);
 
@@ -59,7 +69,18 @@ export const UserProvider = ({ children }) => {
 
   return (
     <UserContext.Provider
-      value={{ user, login, token, logout, tastes, restrictions }}
+      value={{
+        user,
+        login,
+        token,
+        logout,
+        tastes,
+        restrictions,
+        setTastes,
+        setRestrictions,
+        allTastes,
+        allRestrictions,
+      }}
     >
       {children}
     </UserContext.Provider>
