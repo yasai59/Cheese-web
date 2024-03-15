@@ -8,10 +8,11 @@ import { Option } from "./yourProfileComponents/Option";
 import { Password } from "./yourProfileComponents/Password";
 import { RestaurantLots } from "./yourProfileComponents/RestaurantLots";
 import { TastesRestrictions } from "./yourProfileComponents/TastesRestrictions";
+import { useState } from "react";
 
 export const YourProfile = () => {
   const image = useRef(null);
-  const { user, logout } = useContext(UserContext);
+  const { user, logout, setUser } = useContext(UserContext);
 
   const getImage = async () => {
     const res = await fetch(axios.defaults.baseURL + "/api/user/photo", {
@@ -56,16 +57,65 @@ export const YourProfile = () => {
     input.click();
   };
 
+  const [username, setUsername] = useState(user.username);
+
+  const error = useRef(null);
+
+  const handleChangeUsername = (e) => {
+    setUsername(e.target.value);
+  };
+
+  const submitUsername = () => {
+    if (username.length < 3) {
+      error.current.textContent = "The username must have 3 characters minimum";
+      return;
+    }
+
+    const isValidUsername = /^[a-zA-Z0-9!@#$%^&()_+\-=.<>?]*$/;
+    if (!isValidUsername.test(username)) {
+      error.current.textContent = "Invalid characters in username";
+      return;
+    }
+
+    axios
+      .put("/api/user", {
+        ...user,
+        username,
+      })
+      .catch(() => {
+        error.current.textContent = "Another user already has this username";
+      })
+      .then((res) => {
+        setUser(res.data.userDb);
+
+        error.current.textContent = "";
+      });
+  };
+
   return (
     <div className="w-full mx-auto flex flex-col">
       <h1 className="text-4xl text-light font-bold my-5 ms-5">Your Profile</h1>
       <div className="self-center my-5">
         <div
-          className="w-36 h-36 rounded-full bg-cover cursor-pointer"
+          className="w-36 h-36 rounded-full bg-cover cursor-pointer mx-auto"
           ref={image}
           onClick={handleChangeImage}
         ></div>
-        <p className="text-light text-center mt-5 text-xl">{user.username}</p>
+        <p ref={error} className="text-red-500 text-center mt-5"></p>
+        <input
+          type="text"
+          className="text-light text-center text-xl bg-transparent"
+          value={username}
+          onInput={handleChangeUsername}
+        />
+        <p
+          className={`text-center text-blue-500 cursor-pointer ${
+            username === user.username && "hidden"
+          }`}
+          onClick={submitUsername}
+        >
+          Change username
+        </p>
       </div>
       <section className="grid laptop:grid-cols-2">
         <Option title="Email" content={user.email} type="text" />
