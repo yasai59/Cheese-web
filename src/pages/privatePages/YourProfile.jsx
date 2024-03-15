@@ -32,11 +32,39 @@ export const YourProfile = () => {
     });
   }, []);
 
+  const handleChangeImage = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append("photo", file);
+      try {
+        await axios.post("/api/user/photo", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        // Refresh the image after successful upload
+        const url = await getImage();
+        image.current.style.backgroundImage = `url(${url})`;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    input.click();
+  };
+
   return (
     <div className="w-full mx-auto flex flex-col">
       <h1 className="text-4xl text-light font-bold my-5 ms-5">Your Profile</h1>
       <div className="self-center my-5">
-        <div className="w-36 h-36 rounded-full bg-cover" ref={image}></div>
+        <div
+          className="w-36 h-36 rounded-full bg-cover cursor-pointer"
+          ref={image}
+          onClick={handleChangeImage}
+        ></div>
         <p className="text-light text-center mt-5 text-xl">{user.username}</p>
       </div>
       <section className="grid laptop:grid-cols-2">
