@@ -27,7 +27,7 @@ export const LoginPage = () => {
   };
 
   return (
-    <main className="h-screen tablet:h-screen w-full flex flex-col justify-center items-center laptop:items-end text-6xl container p-2 md:gap-10">
+    <main className="h-screen tablet:h-screen w-full flex flex-col justify-center items-center text-6xl container p-2 md:gap-10">
       <h1 className="hidden text-center laptop:flex font-bold text-transparent bg-gradient-to-r from-primary to-secondary bg-clip-text p-4 md:p-0">
         Discover a new experience
       </h1>
