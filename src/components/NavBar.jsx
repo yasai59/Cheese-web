@@ -4,7 +4,7 @@ import UserContext from "../context/UserContext";
 import { Link } from "react-router-dom";
 
 export const NavBar = () => {
-  const { logout } = useContext(UserContext);
+  const { logout, user } = useContext(UserContext);
 
   const handleLogout = (e) => {
     e.preventDefault();
@@ -65,7 +65,9 @@ export const NavBar = () => {
           </Link>
           <Link
             to="/your-restaurants"
-            className="py-5 hover:underline font-bold text-lg"
+            className={`py-5 hover:underline font-bold text-lg ${
+              user.role_id === 1 ? "hidden" : ""
+            }`}
           >
             <li className="flex items-center gap-4">
               <svg

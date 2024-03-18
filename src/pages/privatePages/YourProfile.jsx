@@ -92,6 +92,27 @@ export const YourProfile = () => {
       });
   };
 
+  const handleChangeType = () => {
+    setUser({ ...user, role_id: user.role_id === 1 ? 2 : 1 });
+
+    axios.put("/api/user", {
+      ...user,
+      role_id: user.role_id === 1 ? 2 : 1,
+    });
+  };
+
+  const handleDeactivate = () => {
+    const confirm = window.confirm(
+      "Are you sure you want to deactivate your account?"
+    );
+
+    if (confirm) {
+      axios.delete("/api/user").then(() => {
+        logout();
+      });
+    }
+  };
+
   return (
     <div className="w-full mx-auto flex flex-col">
       <h1 className="text-4xl text-light font-bold my-5 ms-5">Your Profile</h1>
@@ -133,10 +154,12 @@ export const YourProfile = () => {
         </div>
         <div className="flex flex-col laptop:flex-row">
           <Option
-            title="Change to Restaurant account"
+            title={`Change to ${
+              user.role_id === 1 ? "restaurant" : "customer"
+            } account`}
             content="Change account type"
             type="button"
-            onClick={() => alert("restaurante")}
+            onClick={handleChangeType}
           />
 
           <Option
@@ -144,7 +167,7 @@ export const YourProfile = () => {
             content="Deactivate account"
             type="button"
             className="bg-secondary text-black"
-            onClick={() => alert("delete account")}
+            onClick={handleDeactivate}
           />
         </div>
       </section>

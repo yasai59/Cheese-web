@@ -5,8 +5,6 @@ import UserContext from "../../../context/UserContext";
 export const RestrictionsSelect = ({ itemActive, setItemActive }) => {
   const { allRestrictions } = useContext(UserContext);
 
-  console.log({ itemActive, allRestrictions });
-
   return (
     <div className="grid grid-cols-3 gap-5 mb-5">
       <div

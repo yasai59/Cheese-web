@@ -52,10 +52,15 @@ export const TastesRestrictions = () => {
   };
 
   const uploadRestrictions = (restrictions) => {
+    const defRestrictions = [
+      restrictionActive,
+      ...restrictions.filter((r) => r.id > 3),
+    ];
+
     axios.post("/api/restriction", {
-      restrictions: restrictions.map((r) => r.id),
+      restrictions: defRestrictions.map((r) => r.id),
     });
-    setRestrictions(restrictions);
+    setRestrictions(defRestrictions);
   };
 
   return (
