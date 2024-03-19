@@ -60,6 +60,16 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const loginToken = async (token, user) => {
+    setUser(user);
+    setToken(token);
+
+    axios.defaults.headers.common["x-token"] = token;
+
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+  };
+
   const logout = () => {
     setUser(null);
     setToken(null);
@@ -73,6 +83,7 @@ export const UserProvider = ({ children }) => {
         user,
         setUser,
         login,
+        loginToken,
         token,
         logout,
         tastes,

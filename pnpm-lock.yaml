@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@react-oauth/google':
+    specifier: ^0.12.1
+    version: 0.12.1(react-dom@18.2.0)(react@18.2.0)
   axios:
     specifier: ^1.6.7
     version: 1.6.7
@@ -651,6 +654,16 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@react-oauth/google@0.12.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-qagsy22t+7UdkYAiT5ZhfM4StXi9PPNvw0zuwNmabrWyMKddczMtBIOARflbaIj+wHiQjnMAsZmzsUYuXeyoSg==}
+    peerDependencies:
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
 
   /@remix-run/router@1.15.1:
     resolution: {integrity: sha512-zcU0gM3z+3iqj8UX45AmWY810l3oUmXM7uH4dt5xtzvMhRtYVhKGOmgOd1877dOPPepfCjUv57w+syamWIYe7w==}

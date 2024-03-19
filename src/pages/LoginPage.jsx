@@ -6,9 +6,11 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import UserContext from "../context/UserContext";
 import { useState } from "react";
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 
 export const LoginPage = () => {
-  const { login } = useContext(UserContext);
+  const { login, loginToken } = useContext(UserContext);
 
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
@@ -25,6 +27,38 @@ export const LoginPage = () => {
         setError(err.response.data.message);
       });
   };
+
+  const handleSuccess = async (res) => {
+    // get the user from google
+    const userResp = await axios.get(
+      `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${res.access_token}`
+    );
+
+    try {
+      const serverResp = await axios.post("/api/user/google", {
+        email: userResp.data.email,
+        name: userResp.data.given_name,
+        photo: userResp.data.photo,
+        userId: userResp.data.id,
+        web: true,
+        idToken: res.access_token,
+      });
+
+      loginToken(serverResp.data.token, serverResp.data.user);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleFailure = (err) => {
+    console.log(err);
+  };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: handleSuccess,
+    onFailure: handleFailure,
+    offlineAccess: true,
+  });
 
   return (
     <main className="h-screen tablet:h-screen w-full flex flex-col justify-center items-center text-6xl container p-2 md:gap-10">
@@ -44,6 +78,7 @@ export const LoginPage = () => {
           <LoginGoogle
             title={"Login with Google"}
             className={"justify-center"}
+            onClick={googleLogin}
           />
           <div className="flex items-center">
             <div className="bg-base-light flex-grow h-[1px]"></div>
