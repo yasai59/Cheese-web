@@ -8,6 +8,7 @@ import { YourProfile } from "../pages/privatePages/YourProfile";
 import { NavBar } from "../components/NavBar";
 import { NavBarMobile } from "../components/NavBarMobile";
 import { HeaderMobile } from "../components/HeaderMobile";
+import { AddRestaurant } from "../pages/privatePages/AddRestaurant";
 
 export const PrivateRoutes = () => {
   return (
@@ -28,6 +29,7 @@ export const PrivateRoutes = () => {
             element={<FavoriteRestaurants />}
           />
           <Route path="/your-profile" element={<YourProfile />} />
+          <Route path="/add-restaurant" element={<AddRestaurant />}/>
           <Route path="/*" element={<Navigate to="/" />} />
         </Routes>
       </div>

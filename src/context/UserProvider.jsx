@@ -13,9 +13,12 @@ export const UserProvider = ({ children }) => {
   const [restrictions, setRestrictions] = useState([]);
   const [allTastes, setAllTastes] = useState([]);
   const [allRestrictions, setAllRestrictions] = useState([]);
+  const [restaurants, setRestaurants] = useState([]);
 
+  axios.defaults.baseURL = "http://localhost:3000";
   useEffect(() => {
-    axios.defaults.baseURL = "http://localhost:3000";
+    if(!token) return;
+
     axios.defaults.headers.common["x-token"] = localStorage.getItem("token");
     axios.get("/api/taste").then((res) => {
       setTastes(res.data.tastes);
@@ -31,6 +34,10 @@ export const UserProvider = ({ children }) => {
 
     axios.get("/api/restriction/all").then((res) => {
       setAllRestrictions(res.data.restrictions);
+    });
+
+    axios.get("/api/restaurant").then((res) => {
+      setRestaurants(res.data);
     });
   }, [token]);
 
@@ -92,6 +99,8 @@ export const UserProvider = ({ children }) => {
         setRestrictions,
         allTastes,
         allRestrictions,
+        restaurants,
+        setRestaurants,
       }}
     >
       {children}
