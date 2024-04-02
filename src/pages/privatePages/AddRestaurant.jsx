@@ -4,7 +4,6 @@ import { Input } from "../../components/Input";
 import { AddPhoto } from "../../components/AddPhoto";
 import { ImageCarousel } from "../../components/ImageCarousel";
 import { FormButton } from "../../components/FormButton";
-import { Form } from "react-router-dom";
 
 export const AddRestaurant = () => {
 
@@ -14,9 +13,10 @@ export const AddRestaurant = () => {
     const [selectedImage, setSelectedImage] = React.useState(null);
 
     const handleImageChange = (event) => {
-        const imageFile = event.target.files[0];
+        let imageFile = event.target.files[0];
+        console.log(imageFile);
         if (imageFile) {
-            const imageUrl = URL.createObjectURL(imageFile);
+            let imageUrl = URL.createObjectURL(imageFile);
             setSelectedImage(imageUrl);
             console.log(imageFile);
             console.log(imageUrl);
