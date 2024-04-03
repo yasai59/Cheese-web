@@ -8,8 +8,8 @@ export const YourRestaurants = () => {
   const { restaurants } = useContext(UserContext);
   
   return (
-    <div className="w-full mx-auto flex flex-col">
-      <h1 className="text-4xl text-light font-bold my-5 ms-5">Your Restaurants</h1>
+    <div className="w-full mx-auto flex flex-col py-4">
+      <h1 className="text-4xl text-light font-bold ms-5">Your Restaurants</h1>
       <div>
         {
           restaurants.map((restaurant) => (

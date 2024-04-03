@@ -4,6 +4,7 @@ import { Input } from "../../components/Input";
 import { AddPhoto } from "../../components/AddPhoto";
 import { ImageCarousel } from "../../components/ImageCarousel";
 import { FormButton } from "../../components/FormButton";
+import axios from "axios";
 
 export const AddRestaurant = () => {
 
@@ -11,6 +12,7 @@ export const AddRestaurant = () => {
     const [address, setAddress] = React.useState("");
     const [phoneNumber, setPhoneNumber] = React.useState("");
     const [selectedImage, setSelectedImage] = React.useState(null);
+    const [carousel, setCarousel] = React.useState([]);
 
     const handleImageChange = (event) => {
         let imageFile = event.target.files[0];
@@ -29,6 +31,38 @@ export const AddRestaurant = () => {
         setSelectedImage(null);
     }
 
+    const handleSubmit = async (event) => {
+        event.preventDeafult;
+
+        try {
+            const formData = new FormData();
+            formData.append("name", name);
+            formData.append("address", address);
+            formData.append("phone", phoneNumber);
+            console.log(selectedImage);
+            formData.append("image", selectedImage.src);
+
+    
+            for (let carouselImage of carousel) {
+                formData.append("photo", {
+                    uri: carouselImage.uri,
+                    type: "image/png",
+                    name: carouselImage.uri.split("/").pop(),
+                });
+            }
+
+            const res = await axios.post("/api/restaurant", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
+            console.log(res.data);
+        } catch (error) {
+            console.error(error);
+        }
+
+    }
+
     return (
         <div className="flex flex-col gap-2 p-4">
             <Link to="/your-restaurants" className="text-primary flex items-center justify-start">
@@ -36,7 +70,7 @@ export const AddRestaurant = () => {
                 Back
             </Link>
             <h1 className="text-light text-4xl font-bold">Add Restaurant</h1>
-            <form className="flex flex-col gap-2">
+            <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
                 <div>
                     <label className="text-light text-sm" htmlFor="">Name</label>
                     <Input

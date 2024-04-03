@@ -19,7 +19,7 @@ export const AddPhoto = ({ handleImageChange = "", selectedImage = "", handleDel
             <button type="button" className="absolute top-0 right-0 text-light font-bold" onClick={handleDelete}>
               X
             </button>
-            <img className="w-24 h-24 object-fit rounded-md" src={selectedImage} alt="Profile photo"></img>
+            <img id="image" className="w-24 h-24 object-fit rounded-md" src={selectedImage} alt="Profile photo"/>
           </>
         ) : (
           <label htmlFor="fileInput" className="flex justify-center items-center h-full w-24 border-dashed border-2 border-light rounded-full self-center text-light cursor-pointer">
@@ -38,7 +38,6 @@ export const AddPhoto = ({ handleImageChange = "", selectedImage = "", handleDel
               <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z" /></svg>
             </div>
           </label>
-
         )}
       </div>
 

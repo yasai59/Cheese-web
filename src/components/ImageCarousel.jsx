@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 const ItemCarousel = ({ image, handleDelete }) => {
     return (
         <div className="relative">
-            <img src={image.uri} alt="Carousel Image" className="w-28 h-28 rounded-xl" />
+            <img key={image.id} src={image.uri} alt="Carousel Image" className="w-28 h-28 rounded-xl" />
 
             <button
                 type="button"
@@ -24,7 +24,8 @@ export const ImageCarousel = ({ setDefCarousel = () => { } }) => {
         if (!selectedImage) return;
 
         const imageUrl = URL.createObjectURL(selectedImage);
-        setImages(prevImages => prevImages.concat({ uri: imageUrl, file: selectedImage }));
+        const id = Date.now();
+        setImages(prevImages => prevImages.concat({ id, uri: imageUrl, file: selectedImage }));
     };
 
     useEffect(() => {
