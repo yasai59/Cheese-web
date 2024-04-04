@@ -4,6 +4,7 @@ import { Input } from "../../components/Input";
 import { AddPhoto } from "../../components/AddPhoto";
 import { ImageCarousel } from "../../components/ImageCarousel";
 import { FormButton } from "../../components/FormButton";
+import { resizeFile } from "../../helpers/resizeImage";
 import axios from "axios";
 
 export const AddRestaurant = () => {
@@ -11,45 +12,21 @@ export const AddRestaurant = () => {
     const [name, setName] = React.useState("");
     const [address, setAddress] = React.useState("");
     const [phoneNumber, setPhoneNumber] = React.useState("");
-    const [selectedImage, setSelectedImage] = React.useState(null);
+    const [image, setImage] = React.useState(null);
     const [carousel, setCarousel] = React.useState([]);
 
-    const handleImageChange = (event) => {
-        let imageFile = event.target.files[0];
-        console.log(imageFile);
-        if (imageFile) {
-            let imageUrl = URL.createObjectURL(imageFile);
-            setSelectedImage(imageUrl);
-            console.log(imageFile);
-            console.log(imageUrl);
-        } else {
-            setSelectedImage(null);
-        }
-    };
-
-    const handleDelete = () => {
-        setSelectedImage(null);
-    }
-
     const handleSubmit = async (event) => {
-        event.preventDeafult;
+        event.preventDefault()
+        console.log(image);
+        const resized = await resizeFile(image);
 
+        console.log(resized);
         try {
             const formData = new FormData();
             formData.append("name", name);
             formData.append("address", address);
             formData.append("phone", phoneNumber);
-            console.log(selectedImage);
-            formData.append("image", selectedImage.src);
-
-    
-            for (let carouselImage of carousel) {
-                formData.append("photo", {
-                    uri: carouselImage.uri,
-                    type: "image/png",
-                    name: carouselImage.uri.split("/").pop(),
-                });
-            }
+            formData.append("image", resized);            
 
             const res = await axios.post("/api/restaurant", formData, {
                 headers: {
@@ -101,16 +78,14 @@ export const AddRestaurant = () => {
                 <div>
                     <label className="text-light text-sm" htmlFor="">Photo</label>
                     <AddPhoto 
-                        handleImageChange={handleImageChange} 
-                        selectedImage={selectedImage} 
-                        handleDelete={handleDelete}
+                        setImageDef={setImage}
                     />
                 </div>
                 <hr className="w-full border-light mt-2" />
                 <div className="flex flex-col gap-2">
                     <label className="text-primary text-md" htmlFor="">Your carousel</label>
                     <p className="text-light text-sm"> You need to add at least 2 photos</p>
-                    <ImageCarousel/>
+                    <ImageCarousel setDefCarousel={setCarousel}/>
                     <p className="text-light mt-3 text-[13px]">
                         To start adding your dishes go to the restaurant page once created
                     </p>

@@ -1,10 +1,22 @@
 import React from "react";
 import { useState } from "react";
 
-export const AddPhoto = ({ handleImageChange = "", selectedImage = "", handleDelete = "" }) => {
+export const AddPhoto = ({ setImageDef }) => {
 
+  const [image, setImage] = useState(null);
   // generate key to remove and add the same image
   const [inputKey, setInputKey] = useState(0);
+
+  const handlePickImage = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const imageUrl = URL.createObjectURL(file);
+        setImage(imageUrl);
+        setImageDef && setImageDef(file)
+    } else {
+      setImage(null);
+    }
+  }
 
   const handleNewImageSelected = () => {
     setInputKey(prevKey => prevKey + 1)
@@ -14,12 +26,14 @@ export const AddPhoto = ({ handleImageChange = "", selectedImage = "", handleDel
     <div className=" relative flex justify-center gap-4 h-24 w-full mt-2">
       <div className="flex justify-center items-center">
 
-        {selectedImage ? (
+        {image ? (
           <>
-            <button type="button" className="absolute top-0 right-0 text-light font-bold" onClick={handleDelete}>
+            <button type="button" className="absolute top-0 right-0 text-light font-bold" onClick={() => {
+              setImage(null)
+            }}>
               X
             </button>
-            <img id="image" className="w-24 h-24 object-fit rounded-md" src={selectedImage} alt="Profile photo"/>
+            <img id="image" className="w-24 h-24 object-fit rounded-md" src={image} alt="Profile photo"/>
           </>
         ) : (
           <label htmlFor="fileInput" className="flex justify-center items-center h-full w-24 border-dashed border-2 border-light rounded-full self-center text-light cursor-pointer">
@@ -31,7 +45,7 @@ export const AddPhoto = ({ handleImageChange = "", selectedImage = "", handleDel
                 style={{ display: "none" }}
                 key={inputKey}
                 onChange={(event) => {
-                  handleImageChange(event)
+                  handlePickImage(event)
                   handleNewImageSelected()
                 }}
               />
