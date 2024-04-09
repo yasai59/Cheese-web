@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { resizeFile } from "../helpers/resizer";
+
 
 const ItemCarousel = ({ image, handleDelete }) => {
     return (
         <div className="relative">
-            <img key={image.id} src={image.uri} alt="Carousel Image" className="w-28 h-28 rounded-xl" />
+            <img key={image.name} src={image.imageUrl} alt="Carousel Image" className="w-28 h-28 rounded-xl" />
 
             <button
                 type="button"
@@ -19,22 +21,30 @@ const ItemCarousel = ({ image, handleDelete }) => {
 export const ImageCarousel = ({ setDefCarousel = () => { } }) => {
     const [images, setImages] = useState([]);
 
-    const handlePickImage = async (e) => {
-        const selectedImage = e.target.files[0];
-        if (!selectedImage) return;
 
-        const imageUrl = URL.createObjectURL(selectedImage);
-        const id = Date.now();
-        setImages(prevImages => prevImages.concat({ id, uri: imageUrl, file: selectedImage }));
+    const handlePickImage = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const imageUrl = URL.createObjectURL(file);
+        const resized = await resizeFile(file);
+        console.log(resized);
+        
+        
+
+        setImages(prevImages => {
+            const arr = [...prevImages, {resized, imageUrl: imageUrl}];
+            return arr;
+        });
+        e.target.value = null;
     };
+    
 
     useEffect(() => {
         setDefCarousel(images);
-        console.log(images);
     }, [images]);
 
     const handleDelete = (imageUri) => {
-        setImages((prevImages) => prevImages.filter((img) => img.uri !== imageUri));
+        setImages(prevImages => prevImages.filter(img => img !== imageUri));
     };
 
     return (
@@ -43,14 +53,14 @@ export const ImageCarousel = ({ setDefCarousel = () => { } }) => {
                 <ItemCarousel
                     key={index}
                     image={image}
-                    handleDelete={() => handleDelete(image.uri)}
+                    handleDelete={() => handleDelete(image)}
                 />
             ))}
             {images.length < 12 && (
-                <label htmlFor="fileInput" className="rounded-xl border-2 aspect-square border-dashed border-light w-28 self-center justify-center items-center">
+                <label htmlFor="fileInputCarousel" className="rounded-xl border-2 aspect-square border-dashed border-light w-28 self-center justify-center items-center">
                     <div className="flex justify-center items-center h-full text-light cursor-pointer">
-                        <input id="fileInput" type="file" accept="image/*" style={{ display: "none" }} onChange={handlePickImage} />
-                        <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"/></svg>
+                        <input id="fileInputCarousel" type="file" accept="image/*" style={{ display: "none" }} onChange={handlePickImage} />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z" /></svg>
                     </div>
                 </label>
             )}

@@ -4,8 +4,9 @@ import { Input } from "../../components/Input";
 import { AddPhoto } from "../../components/AddPhoto";
 import { ImageCarousel } from "../../components/ImageCarousel";
 import { FormButton } from "../../components/FormButton";
-import { resizeFile } from "../../helpers/resizeImage";
+import { resizeFile } from "../../helpers/resizer";
 import axios from "axios";
+import { useEffect } from "react";
 
 export const AddRestaurant = () => {
 
@@ -15,12 +16,18 @@ export const AddRestaurant = () => {
     const [image, setImage] = React.useState(null);
     const [carousel, setCarousel] = React.useState([]);
 
+    useEffect(() => {
+        console.log(carousel);
+    }, [carousel])
+
     const handleSubmit = async (event) => {
         event.preventDefault()
-        console.log(image);
+        if(!image) {
+            alert('No hay imagen de perfil, no se puede crear el restaurante');
+            return;
+        }
         const resized = await resizeFile(image);
-
-        console.log(resized);
+    
         try {
             const formData = new FormData();
             formData.append("name", name);
@@ -28,6 +35,13 @@ export const AddRestaurant = () => {
             formData.append("phone", phoneNumber);
             formData.append("image", resized);            
 
+            console.log(resized)
+            for (let carouselImage of carousel) {
+                console.log(carouselImage);
+                formData.append("photo", carouselImage.resized);
+            }
+
+            
             const res = await axios.post("/api/restaurant", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
@@ -77,15 +91,13 @@ export const AddRestaurant = () => {
                 </div>
                 <div>
                     <label className="text-light text-sm" htmlFor="">Photo</label>
-                    <AddPhoto 
-                        setImageDef={setImage}
-                    />
+                    <AddPhoto setImageDef={setImage} />
                 </div>
                 <hr className="w-full border-light mt-2" />
                 <div className="flex flex-col gap-2">
                     <label className="text-primary text-md" htmlFor="">Your carousel</label>
                     <p className="text-light text-sm"> You need to add at least 2 photos</p>
-                    <ImageCarousel setDefCarousel={setCarousel}/>
+                    <ImageCarousel setDefCarousel={setCarousel} />
                     <p className="text-light mt-3 text-[13px]">
                         To start adding your dishes go to the restaurant page once created
                     </p>
