@@ -3,15 +3,36 @@ import { useContext } from "react";
 import { Routes, Route, Navigate } from "react-router";
 import { Link } from "react-router-dom";
 import UserContext from "../context/UserContext";
+import { useRef } from "react";
+import { Dashboard } from "../admin/Dashboard";
+import { Users } from "../admin/Users";
+import { Restaurants } from "../admin/Restaurants";
+import { Reports } from "../admin/Reports";
+import { Tastes } from "../admin/Tastes";
+import { Restrictions } from "../admin/Restrictions";
 
 export const AdminRoutes = () => {
   const { logout } = useContext(UserContext);
+  const navRef = useRef(null);
+
+  const toggleNav = () => {
+    navRef.current.classList.toggle("-translate-y-[110%]");
+  };
 
   return (
     <div className="min-h-screen flex flex-col tablet:flex-row w-full">
-      <nav>
+      <nav
+        className="tablet:mt-3 w-full tablet:w-min -translate-y-[110%] absolute tablet:translate-y-0 tablet:relative transition-transform bg-base-dark"
+        ref={navRef}
+      >
+        <p
+          className="cursor-pointer mr-3 my-3 tablet:hidden absolute top-0 right-0 text-2xl"
+          onClick={toggleNav}
+        >
+          X
+        </p>
         <ul className="[&>li>a]:flex [&>li>a]:items-center [&>li>a>svg]:mr-3 [&>li>a]:text-2xl [&>li]:mb-2 [&>li>a]:px-2">
-          <li>
+          <li onClick={toggleNav}>
             <Link to="/admin">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +48,7 @@ export const AdminRoutes = () => {
               Dashboard
             </Link>
           </li>
-          <li>
+          <li onClick={toggleNav}>
             <Link to="/admin/users">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -43,7 +64,7 @@ export const AdminRoutes = () => {
               Users
             </Link>
           </li>
-          <li>
+          <li onClick={toggleNav}>
             <Link to="/admin/restaurants">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -59,7 +80,7 @@ export const AdminRoutes = () => {
               Restaurants
             </Link>
           </li>
-          <li>
+          <li onClick={toggleNav}>
             <Link to="/admin/reports">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +96,7 @@ export const AdminRoutes = () => {
               Reports
             </Link>
           </li>
-          <li>
+          <li onClick={toggleNav}>
             <Link to="/admin/tastes">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -86,16 +107,12 @@ export const AdminRoutes = () => {
                 <g fill="none">
                   <path
                     stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="4"
                     d="M33.375 33.874c4.243-4.242 1.414-18.384-4.95-24.748c-2.828-2.829-10.96-8.84-19.799 0c-8.839 8.838-2.828 16.97 0 19.799c6.364 6.364 20.506 9.192 24.749 4.95"
                   />
-                  <path
-                    stroke="currentColor"
-                    stroke-width="4"
-                    d="m41 41l-7-7"
-                  />
+                  <path stroke="currentColor" strokeWidth="4" d="m41 41l-7-7" />
                   <circle
                     cx="42.193"
                     cy="40.071"
@@ -118,7 +135,7 @@ export const AdminRoutes = () => {
               Tastes
             </Link>
           </li>
-          <li>
+          <li onClick={toggleNav}>
             <Link to="/admin/restrictions">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -134,7 +151,7 @@ export const AdminRoutes = () => {
               Restrictions
             </Link>
           </li>
-          <li>
+          <li onClick={toggleNav} className="mt-10 font-bold">
             <Link to="/" onClick={logout}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -152,16 +169,34 @@ export const AdminRoutes = () => {
           </li>
         </ul>
       </nav>
-      <main className="bg-red-500 flex-grow">
+      <div>
+        <div
+          className="w-min tablet:hidden cursor-pointer text-4xl"
+          onClick={toggleNav}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="1em"
+            height="1em"
+            viewBox="0 0 24 24"
+          >
+            <path
+              fill="currentColor"
+              d="M3 18v-2h18v2zm0-5v-2h18v2zm0-5V6h18v2z"
+            />
+          </svg>
+        </div>
+      </div>
+      <main className="flex-grow">
         <Routes>
-          <Route path="/admin" element={<h1>admin</h1>} />
-          <Route path="/admin/users" element={<h1>users</h1>} />
-          <Route path="/admin/restaurants" element={<h1>restaurants</h1>} />
-          <Route path="/admin/reports" element={<h1>reports</h1>} />
-          <Route path="/admin/tastes" element={<h1>tastes</h1>} />
-          <Route path="/admin/restrictions" element={<h1>restrictions</h1>} />
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/admin/users" element={<Users />} />
+          <Route path="/admin/restaurants" element={<Restaurants />} />
+          <Route path="/admin/reports" element={<Reports />} />
+          <Route path="/admin/tastes" element={<Tastes />} />
+          <Route path="/admin/restrictions" element={<Restrictions />} />
 
-          <Route path="/*" element={<Navigate to={"/admin"} />} />
+          <Route path="/*" element={<Navigate to={"/admin/dashboard"} />} />
         </Routes>
       </main>
     </div>
