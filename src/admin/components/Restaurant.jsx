@@ -3,11 +3,40 @@ import React from "react";
 import { useState } from "react";
 import { Modal } from "../../components/Modal";
 
-export const Restaurant = ({ restaurant = {} }) => {
+export const Restaurant = ({ restaurant = {}, setRestaurant = () => {} }) => {
   const [open, setOpen] = useState(false);
   const toggleModal = () => {
     console.log(restaurant);
     setOpen((prev) => !prev);
+  };
+
+  const handleDeleteDescription = () => {
+    const confirm = window.confirm(
+      "Are you sure you want to delete the description?"
+    );
+
+    if (!confirm) return;
+
+    axios
+      .put("/api/restaurant", {
+        id: restaurant.id,
+        description: "No description",
+      })
+      .then((res) => {
+        setRestaurant({ ...restaurant, description: "No description" });
+      });
+  };
+
+  const handleDeleteRestaurant = () => {
+    const confirm = window.confirm(
+      "Are you sure you want to delete the restaurant?"
+    );
+
+    if (!confirm) return;
+
+    axios.delete(`/api/restaurant/${restaurant.id}`).then((res) => {
+      setRestaurant(null);
+    });
   };
 
   if (restaurant.loading) {
@@ -80,8 +109,12 @@ export const Restaurant = ({ restaurant = {} }) => {
         </div>
         {/* delete description and delete restaurant buttons */}
         <div className="flex gap-4 justify-end">
-          <button className="btn btn-error">Delete description</button>
-          <button className="btn btn-error">Delete restaurant</button>
+          <button className="btn btn-error" onClick={handleDeleteDescription}>
+            Delete description
+          </button>
+          <button className="btn btn-error" onClick={handleDeleteRestaurant}>
+            Delete restaurant
+          </button>
         </div>
       </Modal>
     </>

@@ -51,9 +51,29 @@ export const Restaurants = () => {
               restaurant.name?.toLowerCase().includes(search.toLowerCase()) ||
               restaurant.address?.toLowerCase().includes(search.toLowerCase())
           )
-          .map((restaurant) => (
-            <Restaurant restaurant={restaurant} key={restaurant.id} />
-          ))}
+          .map((restaurant, index) => {
+            const setRestaurant = (payload) => {
+              setRestaurants((prev) => {
+                const arr1 = prev.slice(0, index);
+                let arr2 = [];
+                if (index <= prev.length - 1) {
+                  arr2 = prev.slice(index + 1);
+                }
+
+                if (!payload) return [...arr1, ...arr2];
+
+                return [...arr1, payload, ...arr2];
+              });
+            };
+
+            return (
+              <Restaurant
+                restaurant={restaurant}
+                key={restaurant.id}
+                setRestaurant={setRestaurant}
+              />
+            );
+          })}
       </div>
     </div>
   );
