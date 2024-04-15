@@ -2,7 +2,7 @@ import React from "react";
 import { Input } from "../components/Input";
 import { FormButton } from "../components/FormButton";
 import { useState } from "react";
-import { Navigate, useSearchParams } from "react-router-dom";
+import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
@@ -10,6 +10,8 @@ export const RecoverPassword = () => {
   const [queryParameters] = useSearchParams();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const code = queryParameters.get("code");
   const email = queryParameters.get("email");
@@ -38,7 +40,11 @@ export const RecoverPassword = () => {
         password,
       })
       .then((res) => {
-        console.log(res.data);
+        alert("Password updated successfully");
+        navigate("/login");
+      })
+      .catch((err) => {
+        alert("An error occurred");
       });
   };
 
