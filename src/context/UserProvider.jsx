@@ -17,7 +17,7 @@ export const UserProvider = ({ children }) => {
 
   axios.defaults.baseURL = "http://localhost:3000";
   useEffect(() => {
-    if(!token) return;
+    if (!token) return;
 
     axios.defaults.headers.common["x-token"] = localStorage.getItem("token");
     axios.get("/api/taste").then((res) => {
@@ -84,6 +84,16 @@ export const UserProvider = ({ children }) => {
     localStorage.removeItem("user");
   };
 
+  const updateAllTastesAndRestrictions = () => {
+    axios.get("/api/taste/all").then((res) => {
+      setAllTastes(res.data.tastes);
+    });
+
+    axios.get("/api/restriction/all").then((res) => {
+      setAllRestrictions(res.data.restrictions);
+    });
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -101,6 +111,7 @@ export const UserProvider = ({ children }) => {
         allRestrictions,
         restaurants,
         setRestaurants,
+        updateAllTastesAndRestrictions,
       }}
     >
       {children}

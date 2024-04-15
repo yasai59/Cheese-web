@@ -73,6 +73,14 @@ export const User = ({ user = {}, setUser = () => {} }) => {
           <div className="text-sm">
             <p>{user.active === 1 ? "Verified email" : "Email not verified"}</p>
           </div>
+          <div className="flex gap-4">
+            <button className="btn btn-primary" onClick={handleEditEmail}>
+              Edit email
+            </button>
+            <button className="btn btn-error" onClick={handleDeleteUser}>
+              Delete user
+            </button>
+          </div>
         </div>
       </Modal>
     </>
