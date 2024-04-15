@@ -4,6 +4,7 @@ import UserContext from "../context/UserContext";
 import { Pill } from "../components/Pill";
 import { useState } from "react";
 import { useRef } from "react";
+import axios from "axios";
 
 export const Restrictions = () => {
   const { allRestrictions, updateAllTastesAndRestrictions } =
@@ -19,14 +20,22 @@ export const Restrictions = () => {
 
     if (!name) return;
 
-    console.log(name);
-    updateAllTastesAndRestrictions();
+    axios
+      .post("/api/restriction/create", {
+        name: name,
+      })
+      .then((res) => {
+        updateAllTastesAndRestrictions();
+      })
+      .catch((e) => {
+        alert("Error adding restriction");
+      });
   };
 
   return (
     <div>
       <div className="container mx-auto">
-        <h1 className="text-5xl font-bold my-5 p-5">Tastes</h1>
+        <h1 className="text-5xl font-bold my-5 p-5">Restrictions</h1>
         <div className="flex p-5">
           <input
             type="text"
@@ -36,18 +45,17 @@ export const Restrictions = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        {/* add Taste form */}
         <form className="w-full flex gap-5 mt-7 p-5" onSubmit={handleAddTaste}>
           <input
             type="text"
             className="input input-bordered w-full"
-            placeholder="Add Taste"
+            placeholder="Add Restriction"
             ref={addTasteRef}
           />
           <input
             type="submit"
-            className="btn btn-primary"
-            value="Add Taste to List"
+            className="btn bg-primary text-black"
+            value="Add Restriction"
           />
         </form>
         <div className="flex gap-5 flex-wrap my-5 p-5">

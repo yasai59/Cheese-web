@@ -29,7 +29,7 @@ export const User = ({ user = {}, setUser = () => {} }) => {
 
     if (!confirm) return;
 
-    axios.delete(`/api/user/${user.id}`).then((res) => {
+    axios.delete(`/api/user/admin/${user.id}`).then((res) => {
       setUser(null);
     });
   };
@@ -48,10 +48,10 @@ export const User = ({ user = {}, setUser = () => {} }) => {
             alt={user.username}
             className="w-20 h-20 rounded-full object-cover"
           />
-          <div className="flex flex-col gap-2">
-            <div className="text-lg font-bold">{user.username}</div>
-            <div className="text-sm">{user.email}</div>
-          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <div className="text-lg font-bold">{user.username}</div>
+          <div className="text-sm">{user.email}</div>
         </div>
         <div className="text-sm">
           <p>{user.active === 1 ? "Verified email" : "Email not verified"}</p>

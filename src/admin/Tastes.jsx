@@ -4,6 +4,7 @@ import UserContext from "../context/UserContext";
 import { Pill } from "../components/Pill";
 import { useState } from "react";
 import { useRef } from "react";
+import axios from "axios";
 
 export const Tastes = () => {
   const { allTastes, updateAllTastesAndRestrictions } = useContext(UserContext);
@@ -18,8 +19,16 @@ export const Tastes = () => {
 
     if (!name) return;
 
-    console.log(name);
-    updateAllTastesAndRestrictions();
+    axios
+      .post("/api/taste/create", {
+        name: name,
+      })
+      .then((res) => {
+        updateAllTastesAndRestrictions();
+      })
+      .catch((e) => {
+        alert("Error adding taste");
+      });
   };
 
   return (
@@ -45,8 +54,8 @@ export const Tastes = () => {
           />
           <input
             type="submit"
-            className="btn btn-primary"
-            value="Add Taste to List"
+            className="btn bg-primary text-black"
+            value="Add Taste"
           />
         </form>
         <div className="flex gap-5 flex-wrap my-5 p-5">
