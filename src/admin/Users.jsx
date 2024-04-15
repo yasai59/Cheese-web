@@ -36,7 +36,13 @@ export const Users = () => {
               user.email?.toLowerCase().includes(search.toLowerCase())
           )
           .map((user, index) => {
-            return <User user={user} key={user.id} setUser={() => {}} />;
+            const setUser = (newUser) => {
+              const newUsers = [...users];
+              newUsers[index] = newUser;
+              setUsers(newUsers);
+            };
+
+            return <User user={user} key={user.id} setUser={setUser} />;
           })}
       </div>
     </div>

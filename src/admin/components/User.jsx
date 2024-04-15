@@ -15,7 +15,7 @@ export const User = ({ user = {}, setUser = () => {} }) => {
     if (!email) return;
 
     axios
-      .put("/api/user", {
+      .put("/api/user/admin", {
         id: user.id,
         email,
       })
@@ -29,9 +29,26 @@ export const User = ({ user = {}, setUser = () => {} }) => {
 
     if (!confirm) return;
 
-    axios.delete(`/api/user/admin/${user.id}`).then((res) => {
-      setUser(null);
-    });
+    axios
+      .delete(`/api/user/admin/${user.id}`)
+      .then((res) => {
+        setUser({ ...user, active: 0 });
+      })
+      .catch((e) => {
+        console.log(e);
+        alert("Error deleting user");
+      });
+  };
+
+  const handleActivateAccount = () => {
+    axios
+      .put("/api/user/admin", {
+        id: user.id,
+        active: 1,
+      })
+      .then((res) => {
+        setUser({ ...user, active: 1 });
+      });
   };
 
   return (
@@ -54,7 +71,12 @@ export const User = ({ user = {}, setUser = () => {} }) => {
           <div className="text-sm">{user.email}</div>
         </div>
         <div className="text-sm">
-          <p>{user.active === 1 ? "Verified email" : "Email not verified"}</p>
+          <p>{user.verified === 1 ? "Verified email" : "Email not verified"}</p>
+        </div>
+        <div className="text-sm">
+          <p className="font-bold text-secondary">
+            {user.active === 1 ? "" : "Deactivated account"}
+          </p>
         </div>
       </div>
       <Modal open={open} setOpen={setOpen}>
@@ -77,9 +99,18 @@ export const User = ({ user = {}, setUser = () => {} }) => {
             <button className="btn btn-primary" onClick={handleEditEmail}>
               Edit email
             </button>
-            <button className="btn btn-error" onClick={handleDeleteUser}>
-              Delete user
-            </button>
+            {user.active === 1 ? (
+              <button className="btn btn-error" onClick={handleDeleteUser}>
+                Deactivate account
+              </button>
+            ) : (
+              <button
+                className="btn btn-success"
+                onClick={handleActivateAccount}
+              >
+                Activate account
+              </button>
+            )}
           </div>
         </div>
       </Modal>
