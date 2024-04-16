@@ -10,6 +10,9 @@ import { Restaurants } from "../admin/Restaurants";
 import { Reports } from "../admin/Reports";
 import { Tastes } from "../admin/Tastes";
 import { Restrictions } from "../admin/Restrictions";
+import axios from "axios";
+import { useEffect } from "react";
+import { useState } from "react";
 
 export const AdminRoutes = () => {
   const { logout } = useContext(UserContext);
@@ -18,6 +21,20 @@ export const AdminRoutes = () => {
   const toggleNav = () => {
     navRef.current.classList.toggle("-translate-y-[110%]");
   };
+
+  const [users, setUsers] = useState([]);
+
+  const [restaurants, setRestaurants] = useState([]);
+
+  useEffect(() => {
+    axios.get("/api/user/getAll").then((res) => {
+      setUsers(res.data.users);
+    });
+
+    axios.get("/api/restaurant/getAll").then((res) => {
+      setRestaurants(res.data.restaurants);
+    });
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col tablet:flex-row w-full">
@@ -190,8 +207,19 @@ export const AdminRoutes = () => {
       <main className="flex-grow">
         <Routes>
           <Route path="/admin/dashboard" element={<Dashboard />} />
-          <Route path="/admin/users" element={<Users />} />
-          <Route path="/admin/restaurants" element={<Restaurants />} />
+          <Route
+            path="/admin/users"
+            element={<Users users={users} setUsers={setUsers} />}
+          />
+          <Route
+            path="/admin/restaurants"
+            element={
+              <Restaurants
+                restaurants={restaurants}
+                setRestaurants={setRestaurants}
+              />
+            }
+          />
           <Route path="/admin/reports" element={<Reports />} />
           <Route path="/admin/tastes" element={<Tastes />} />
           <Route path="/admin/restrictions" element={<Restrictions />} />

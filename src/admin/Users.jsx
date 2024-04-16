@@ -1,19 +1,9 @@
-import axios from "axios";
 import React from "react";
 import { useState } from "react";
-import { useEffect } from "react";
 import { User } from "./components/User";
 
-export const Users = () => {
-  const [users, setUsers] = useState([]);
+export const Users = ({ users, setUsers }) => {
   const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    axios.get("/api/user/getAll").then((res) => {
-      setUsers(res.data.users);
-      console.log(res.data.users);
-    });
-  }, []);
 
   return (
     <div>

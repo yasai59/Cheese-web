@@ -9,6 +9,8 @@ export const User = ({ user = {}, setUser = () => {} }) => {
     setOpen((prev) => !prev);
   };
 
+  const roles = ["", "Client", "Restaurant Owner", "Admin"];
+
   const handleEditEmail = () => {
     const email = prompt("Enter the new email address");
 
@@ -93,7 +95,23 @@ export const User = ({ user = {}, setUser = () => {} }) => {
             <div className="text-sm">{user.address}</div>
           </div>
           <div className="text-sm">
-            <p>{user.active === 1 ? "Verified email" : "Email not verified"}</p>
+            <p>
+              {user.verified === 1 ? "Verified email" : "Email not verified"}
+            </p>
+          </div>
+          <div className="text-sm">
+            <p>{user.email}</p>
+          </div>
+          <div className="text-sm">
+            <p>number of restaurants in discover: {user.lot_number}</p>
+          </div>
+          <div className="text-sm">
+            <p>Role: {roles[user.role_id]}</p>
+          </div>
+          <div className="text-sm">
+            <p className="font-bold text-secondary">
+              {user.active === 1 ? "" : "Deactivated account"}
+            </p>
           </div>
           <div className="flex gap-4">
             <button className="btn btn-primary" onClick={handleEditEmail}>
