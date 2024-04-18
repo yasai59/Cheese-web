@@ -4,7 +4,6 @@ import { Routes, Route, Navigate } from "react-router";
 import { Link } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import { useRef } from "react";
-import { Dashboard } from "../admin/Dashboard";
 import { Users } from "../admin/Users";
 import { Restaurants } from "../admin/Restaurants";
 import { Reports } from "../admin/Reports";
@@ -49,22 +48,6 @@ export const AdminRoutes = () => {
           X
         </p>
         <ul className="[&>li>a]:flex [&>li>a]:items-center [&>li>a>svg]:mr-3 [&>li>a]:text-2xl [&>li]:mb-2 [&>li>a]:px-2">
-          <li onClick={toggleNav}>
-            <Link to="/admin">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="1em"
-                height="1em"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  fill="currentColor"
-                  d="M13 8V4q0-.425.288-.712T14 3h6q.425 0 .713.288T21 4v4q0 .425-.288.713T20 9h-6q-.425 0-.712-.288T13 8M3 12V4q0-.425.288-.712T4 3h6q.425 0 .713.288T11 4v8q0 .425-.288.713T10 13H4q-.425 0-.712-.288T3 12m10 8v-8q0-.425.288-.712T14 11h6q.425 0 .713.288T21 12v8q0 .425-.288.713T20 21h-6q-.425 0-.712-.288T13 20M3 20v-4q0-.425.288-.712T4 15h6q.425 0 .713.288T11 16v4q0 .425-.288.713T10 21H4q-.425 0-.712-.288T3 20m2-9h4V5H5zm10 8h4v-6h-4zm0-12h4V5h-4zM5 19h4v-2H5zm4-2"
-                />
-              </svg>
-              Dashboard
-            </Link>
-          </li>
           <li onClick={toggleNav}>
             <Link to="/admin/users">
               <svg
@@ -206,7 +189,6 @@ export const AdminRoutes = () => {
       </div>
       <main className="flex-grow">
         <Routes>
-          <Route path="/admin/dashboard" element={<Dashboard />} />
           <Route
             path="/admin/users"
             element={<Users users={users} setUsers={setUsers} />}
@@ -224,7 +206,7 @@ export const AdminRoutes = () => {
           <Route path="/admin/tastes" element={<Tastes />} />
           <Route path="/admin/restrictions" element={<Restrictions />} />
 
-          <Route path="/*" element={<Navigate to={"/admin/dashboard"} />} />
+          <Route path="/*" element={<Navigate to={"/admin/users"} />} />
         </Routes>
       </main>
     </div>
