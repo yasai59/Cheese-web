@@ -9,6 +9,7 @@ import { NavBar } from "../components/NavBar";
 import { NavBarMobile } from "../components/NavBarMobile";
 import { HeaderMobile } from "../components/HeaderMobile";
 import { AddRestaurant } from "../pages/privatePages/AddRestaurant";
+import { ViewRestaurant } from "../pages/privatePages/ViewRestaurant";
 
 export const PrivateRoutes = () => {
   return (
@@ -30,6 +31,7 @@ export const PrivateRoutes = () => {
           />
           <Route path="/your-profile" element={<YourProfile />} />
           <Route path="/add-restaurant" element={<AddRestaurant />}/>
+          <Route path="/your-restaurant/:restaurantId" element={<ViewRestaurant />} />
           <Route path="/*" element={<Navigate to="/" />} />
         </Routes>
       </div>

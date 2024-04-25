@@ -14,6 +14,7 @@ export const UserProvider = ({ children }) => {
   const [allTastes, setAllTastes] = useState([]);
   const [allRestrictions, setAllRestrictions] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
+  const [dishes, setDishes] = useState([]);
 
   axios.defaults.baseURL = "http://localhost:3000";
   useEffect(() => {
@@ -39,6 +40,8 @@ export const UserProvider = ({ children }) => {
     axios.get("/api/restaurant").then((res) => {
       setRestaurants(res.data);
     });
+    
+
   }, [token]);
 
   const login = async (username, password) => {
@@ -111,6 +114,8 @@ export const UserProvider = ({ children }) => {
         allRestrictions,
         restaurants,
         setRestaurants,
+        dishes,
+        setDishes,
         updateAllTastesAndRestrictions,
       }}
     >
