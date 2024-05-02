@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
   const [restaurants, setRestaurants] = useState([]);
   const [dishes, setDishes] = useState([]);
 
-  axios.defaults.baseURL = "apicheese.yasai59.com";
+  axios.defaults.baseURL = "https://apicheese.yasai59.com";
   useEffect(() => {
     if (!token) return;
 
@@ -40,8 +40,6 @@ export const UserProvider = ({ children }) => {
     axios.get("/api/restaurant").then((res) => {
       setRestaurants(res.data);
     });
-    
-
   }, [token]);
 
   const login = async (username, password) => {
