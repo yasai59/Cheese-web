@@ -16,7 +16,7 @@ export const UserProvider = ({ children }) => {
   const [restaurants, setRestaurants] = useState([]);
   const [dishes, setDishes] = useState([]);
 
-  axios.defaults.baseURL = "http://localhost:3000";
+  axios.defaults.baseURL = "apicheese.yasai59.com";
   useEffect(() => {
     if (!token) return;
 
