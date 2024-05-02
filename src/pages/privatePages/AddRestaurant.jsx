@@ -22,18 +22,18 @@ export const AddRestaurant = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault()
-        if(!image) {
+        if (!image) {
             alert('No hay imagen de perfil, no se puede crear el restaurante');
             return;
         }
         const resized = await resizeFile(image);
-    
+
         try {
             const formData = new FormData();
             formData.append("name", name);
             formData.append("address", address);
             formData.append("phone", phoneNumber);
-            formData.append("image", resized);            
+            formData.append("image", resized);
 
             console.log(resized)
             for (let carouselImage of carousel) {
@@ -41,7 +41,7 @@ export const AddRestaurant = () => {
                 formData.append("photo", carouselImage.resized);
             }
 
-            
+
             const res = await axios.post("/api/restaurant", formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
@@ -62,14 +62,26 @@ export const AddRestaurant = () => {
             </Link>
             <h1 className="text-light text-4xl font-bold">Add Restaurant</h1>
             <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
-                <div>
-                    <label className="text-light text-sm" htmlFor="">Name</label>
-                    <Input
-                        type="text"
-                        placeholder={"ex.Bob's Burgers"}
-                        value={name}
-                        setValue={setName}
-                    />
+                <div className="md:flex md:justify-between md:gap-4">
+                    <div className="w-full">
+                        <label className="text-light text-sm" htmlFor="">Name</label>
+                        <Input
+                            type="text"
+                            placeholder={"ex.Bob's Burgers"}
+                            value={name}
+                            setValue={setName}
+                        />
+                    </div>
+                    <div className="w-full">
+                        <label className="text-light text-sm" htmlFor="">Phone number</label>
+                        <Input
+                            type="tel"
+                            placeholder={"666777123"}
+                            value={phoneNumber}
+                            setValue={setPhoneNumber}
+                        />
+                    </div>
+
                 </div>
                 <div>
                     <label className="text-light text-sm" htmlFor="">Address</label>
@@ -80,7 +92,7 @@ export const AddRestaurant = () => {
                         setValue={setAddress}
                     />
                 </div>
-                <div>
+                <div className="md:hidden">
                     <label className="text-light text-sm" htmlFor="">Phone number</label>
                     <Input
                         type="tel"
@@ -103,7 +115,7 @@ export const AddRestaurant = () => {
                     </p>
                 </div>
                 <div>
-                    <FormButton title="Add Restaurant" className="w-full text-md"/>
+                    <FormButton title="Add Restaurant" className="w-full text-md" />
                 </div>
             </form>
         </div>

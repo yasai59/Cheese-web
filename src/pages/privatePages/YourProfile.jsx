@@ -41,6 +41,8 @@ export const YourProfile = () => {
       const file = e.target.files[0];
       const formData = new FormData();
       formData.append("photo", file);
+      formData.append("id", restaurant.id)
+      console.log(restaurant.id);
       try {
         await axios.post("/api/user/photo", formData, {
           headers: {
@@ -51,7 +53,7 @@ export const YourProfile = () => {
         const url = await getImage();
         image.current.style.backgroundImage = `url(${url})`;
       } catch (error) {
-        console.error(error);
+        console.error(error + restaurant.id);
       }
     };
     input.click();

@@ -11,13 +11,13 @@ export const YourRestaurants = () => {
     <>
       <div className="w-full mx-auto flex flex-col py-4">
         <h1 className="text-4xl text-light font-bold ms-5">Your Restaurants</h1>
-        <div>
+        <div className="tablet:grid tablet:grid-cols-2 laptop:grid-cols-3">
           {
             restaurants.map((restaurant) => (
               <Link to={`/your-restaurant/${restaurant.id}`} key={restaurant.id}>
-                <div key={restaurant.id} className="flex border border-dark rounded-lg p-5 m-5 bg-base">
+                <div key={restaurant.id} className="flex border border-dark rounded-lg p-5 m-5 bg-base tablet:gap-4">
                   <div className="w-[20%] flex justify-center items-center">
-                    <img className="h-20" src={`${axios.defaults.baseURL}/api/restaurant/profilephoto/${restaurant.photo}`}></img>
+                    <img className="w-28" src={`${axios.defaults.baseURL}/api/restaurant/profilephoto/${restaurant.photo}`}></img>
                   </div>
                   <div className="w-full flex flex-col justify-center items-end">
                     <h2 className="text-2xl text-white font-bold">{restaurant.name}</h2>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const DishesComponent = ({ dishes, isOwner, restaurantId }) => {
+const DishesComponent = ({ dishes, editMode }) => {
     const [visibleDishes, setVisibleDishes] = useState(2);
 
     const loadMoreDishes = () => {
@@ -25,10 +25,10 @@ const DishesComponent = ({ dishes, isOwner, restaurantId }) => {
                         <img className="h-20 w-20 rounded" src={`${axios.defaults.baseURL}/api/dish/photo/${dish.photo}`} alt={dish.dish_name} />
                     </div>
                     <div>
-                        <p className="text-light font-bold text-lg">{dish.dish_name}</p>
+                        <p className="text-white font-bold text-lg">{dish.dish_name}</p>
                         <p className="text-light">{dish.dish_price}€</p>
                     </div>
-                    {isOwner && (
+                    {editMode && (
                         <div className="ml-auto">
                             <Link to={`/delete-dish/${dish.dish_id}`}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" viewBox="0 0 24 24">
