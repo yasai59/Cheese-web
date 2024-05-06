@@ -145,7 +145,7 @@ export const EditRestaurant = ({ setEdit }) => {
           </div>
         </div>
         {/* Menu + AddDish */}
-        <AddDish isEditing={true} />
+        <AddDish isEditing={true} restaurantId={restaurant.id} />
         {/* Dishes */}
         <DishesComponent
           dishes={dishes}

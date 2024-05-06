@@ -1,5 +1,6 @@
 export const Pill = ({ text, activate = false, onClick = false }) => {
-  const realClick = () => {
+  const realClick = (e) => {
+    e.stopPropagation();
     if (onClick) {
       onClick();
     }

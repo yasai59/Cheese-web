@@ -1,25 +1,68 @@
 import React, { useState } from "react";
 import { Modal } from "../../components/Modal";
 import { Input } from "../../components/Input";
+import { AddPhoto } from "../../components/AddPhoto";
+import { useContext } from "react";
+import UserContext from "../../context/UserContext";
+import { Tastes } from "../privatePages/yourRestaurantsComponents/Tastes";
+import { Restrictions } from "../privatePages/yourRestaurantsComponents/Restrictions";
+import { FormButton } from "../../components/FormButton";
+import { resizeFile } from "../../helpers/resizer";
 
-export const AddDish = ({ isEditing }) => {
+export const AddDish = ({ isEditing, restaurantId }) => {
+
+
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [photo, setPhoto] = useState("");
+  const [selectedTastes, setSelectedTastes] = useState([]);
+  const [selectedRestrictions, setSelectedRestrictions] = useState([]);
+  
   const [open, setOpen] = useState(false);
+
 
   const handleOpen = (isOpen) => {
     setOpen(isOpen);
   };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!photo) {
+      alert("Please add a photo");
+      return;
+    }
+
+    const resized = await resizeFile(photo);
+
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("photo", resized);
+      formData.append("tastes", JSON.stringify(tastes));
+      formData.append("restrictions", JSON.stringify(restrictions));
+
+      const res = await axios.post(`api/dish/${restaurantId}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log(res.data);
+    } catch (e) {
+      console.error(e);
+    }
+
+  }
+
 
   return (
     <>
       <div className="border-b border-base-light">
-        <div className="p-4 flex justify-between items-center">
+        <div className="p-4 flex justify-between items-center gap-4">
           <label className="text-primary">Menu</label>
           {isEditing && (
             <button
@@ -37,26 +80,45 @@ export const AddDish = ({ isEditing }) => {
           <h1 className="text-light font-bold text-xl mt-10 text-center">
             Add dish
           </h1>
-          <div className="w-[80%] mx-auto gap-2">
-            <p className="text-light">Name</p>
-            <Input
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <p className="text-light">Description</p>
-            <Input
-              placeholder="Description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-            <p className="text-light">Price</p>
-            <Input
-              placeholder="Price"
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-            />
+          <div className="flex flex-col w-[80%] mx-auto gap-2">
+            <div className="flex flex-col">
+              <label className="text-light text-sm">Name</label>
+              <Input
+                placeholder="Name"
+                value={name}
+                setValue={setName}
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="text-light text-sm">Description</label>
+              <Input
+                placeholder="Description"
+                value={description}
+                setValue={setDescription}
+                />
+            </div>
+            <div className="flex flex-col">
+              <label className="text-light text-sm">Price</label>
+              <Input
+                placeholder="Price"
+                type="number"
+                value={price}
+                setValue={setPrice}
+              />
+            </div>
+            <div className="flex flex-col">
+              <label className="text-light text-sm">Photo</label>
+              <AddPhoto setImageDef={setPhoto} />
+            </div>
+            <div className="flex flex-col">
+              <Tastes />
+            </div>
+            <div className="flex flex-col">
+              <Restrictions /> 
+            </div>
+            <div className="flex flex-col justify-center items-center">
+              <FormButton title="Add Dish" className={`h-[40px] w-36 text-base mt-3 mb-5`} onClick={handleSubmit}/>
+            </div>
           </div>
         </div>
       </Modal>
