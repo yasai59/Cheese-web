@@ -42,7 +42,6 @@ export const YourProfile = () => {
       const formData = new FormData();
       formData.append("photo", file);
       formData.append("id", restaurant.id)
-      console.log(restaurant.id);
       try {
         await axios.post("/api/user/photo", formData, {
           headers: {

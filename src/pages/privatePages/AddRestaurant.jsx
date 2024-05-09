@@ -7,6 +7,7 @@ import { FormButton } from "../../components/FormButton";
 import { resizeFile } from "../../helpers/resizer";
 import axios from "axios";
 import { useEffect } from "react";
+import { useRef } from "react";
 
 export const AddRestaurant = () => {
 
@@ -15,10 +16,7 @@ export const AddRestaurant = () => {
     const [phoneNumber, setPhoneNumber] = React.useState("");
     const [image, setImage] = React.useState(null);
     const [carousel, setCarousel] = React.useState([]);
-
-    useEffect(() => {
-        console.log(carousel);
-    }, [carousel])
+    const formRef = useRef(null);
 
     const handleSubmit = async (event) => {
         event.preventDefault()
@@ -35,9 +33,7 @@ export const AddRestaurant = () => {
             formData.append("phone", phoneNumber);
             formData.append("image", resized);
 
-            console.log(resized)
             for (let carouselImage of carousel) {
-                console.log(carouselImage);
                 formData.append("photo", carouselImage.resized);
             }
 
@@ -47,7 +43,14 @@ export const AddRestaurant = () => {
                     "Content-Type": "multipart/form-data"
                 }
             });
-            console.log(res.data);
+
+            formRef.current.reset();
+            setName("");
+            setAddress("");
+            setPhoneNumber("");
+            setImage(null);
+            setCarousel([]);
+            window.location.href = "/your-restaurants";
         } catch (error) {
             console.error(error);
         }
@@ -61,7 +64,7 @@ export const AddRestaurant = () => {
                 Back
             </Link>
             <h1 className="text-light text-4xl font-bold">Add Restaurant</h1>
-            <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
+            <form ref={formRef} className="flex flex-col gap-2" onSubmit={handleSubmit}>
                 <div className="md:flex md:justify-between md:gap-4">
                     <div className="w-full">
                         <label className="text-light text-sm" htmlFor="">Name</label>
@@ -72,7 +75,7 @@ export const AddRestaurant = () => {
                             setValue={setName}
                         />
                     </div>
-                    <div className="w-full">
+                    <div className="w-full sm:hidden md:block">
                         <label className="text-light text-sm" htmlFor="">Phone number</label>
                         <Input
                             type="tel"

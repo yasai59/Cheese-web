@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 
 export const YourRestaurants = () => {
   const { restaurants } = useContext(UserContext);
-  console.log(restaurants);
   return (
     <>
       <div className="w-full mx-auto flex flex-col py-4">

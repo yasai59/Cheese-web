@@ -13,6 +13,7 @@ export const ViewRestaurant = ({ setEdit }) => {
     (restaurant) => restaurant.id == restaurantId
   );
 
+
   const isOwner = user.id === restaurant.owner_id;
 
   const handleOrderClick = (src) => {

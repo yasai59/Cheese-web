@@ -10,7 +10,6 @@ export const LinkButton = ({ src, originalText, onSave }) => {
 
     const handleSaveChanges = () => {
         onSave(text);
-        console.log(text);
     };
 
     const hasChanges = text !== originalText;

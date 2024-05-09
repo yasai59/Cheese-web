@@ -27,7 +27,6 @@ export const ImageCarousel = ({ setDefCarousel = () => { } }) => {
         if (!file) return;
         const imageUrl = URL.createObjectURL(file);
         const resized = await resizeFile(file);
-        console.log(resized);
         
         
 

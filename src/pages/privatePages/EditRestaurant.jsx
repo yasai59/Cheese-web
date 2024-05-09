@@ -69,8 +69,6 @@ export const EditRestaurant = ({ setEdit }) => {
     restaurant.address
   );
 
-  const [addDishModalOpen, setAddDishModalOpen] = useState(false);
-
   const [carousel, setCarousel] = useState([]);
   useEffect(() => {
     axios

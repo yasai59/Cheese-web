@@ -15,6 +15,7 @@ export const AddPhoto = ({ setImageDef }) => {
         setImageDef && setImageDef(file)
     } else {
       setImage(null);
+      setImageDef && setImageDef(null);
     }
   }
 

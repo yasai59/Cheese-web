@@ -8,7 +8,7 @@ import axios from "axios";
 import { useEffect } from "react";
 import { RestrictionsSelect } from "../yourProfileComponents/RestrictionsSelect";
 
-export const Restrictions = () => {
+export const Restrictions = ({ selectedRestrictions, setSelectedRestrictions }) => {
     const {
         restrictions,
         allRestrictions,
@@ -43,20 +43,21 @@ export const Restrictions = () => {
             restrictionActive,
             ...restrictions.filter((r) => r.id > 3),
         ];
-
-        axios.post("/api/restriction", {
-            restrictions: defRestrictions.map((r) => r.id),
-        });
         setRestrictions(defRestrictions);
+        setSelectedRestrictions(defRestrictions);
     };
+
+    useEffect(() => {
+        setRestrictions(selectedRestrictions || []);
+    }, [selectedRestrictions])
 
     return (
         <>
             <label className="text-light text-sm">Restrictions</label>
-            <div className="flex flex-col justify-center cursor-pointer bg-base rounded h-[50px]" onClick={handleOpenRestrictions}>
+            <div className="flex flex-col justify-center cursor-pointer bg-base rounded h-[50px] p-2 overflow-hidden" onClick={handleOpenRestrictions}>
                 {restrictions && restrictions.length > 0 ? (
                     <div className="laptop:grid row-start-1 row-end-3 col-start-2">
-                        <div className="w-full p-2">
+                        <div className="w-full">
                             <div className="flex gap-3 overflow-hidden">
                                 {restrictions.map((restriction) => {
                                     return (

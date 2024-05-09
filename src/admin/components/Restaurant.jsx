@@ -6,7 +6,6 @@ import { Modal } from "../../components/Modal";
 export const Restaurant = ({ restaurant = {}, setRestaurant = () => {} }) => {
   const [open, setOpen] = useState(false);
   const toggleModal = () => {
-    console.log(restaurant);
     setOpen((prev) => !prev);
   };
 

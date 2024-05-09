@@ -27,7 +27,6 @@ export const RememberPassword = () => {
           setError("We couldn't find an account with that email");
           return;
         }
-        console.log(err.response.data.message);
         alert("Server error");
       });
   };

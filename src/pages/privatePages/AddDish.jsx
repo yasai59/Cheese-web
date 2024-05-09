@@ -2,23 +2,20 @@ import React, { useState } from "react";
 import { Modal } from "../../components/Modal";
 import { Input } from "../../components/Input";
 import { AddPhoto } from "../../components/AddPhoto";
-import { useContext } from "react";
-import UserContext from "../../context/UserContext";
 import { Tastes } from "../privatePages/yourRestaurantsComponents/Tastes";
 import { Restrictions } from "../privatePages/yourRestaurantsComponents/Restrictions";
 import { FormButton } from "../../components/FormButton";
 import { resizeFile } from "../../helpers/resizer";
+import axios from "axios";
 
 export const AddDish = ({ isEditing, restaurantId }) => {
-
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [photo, setPhoto] = useState("");
   const [selectedTastes, setSelectedTastes] = useState([]);
-  const [selectedRestrictions, setSelectedRestrictions] = useState([]);
-  
+  const [selectedRestrictions, setSelectedRestrictions] = useState([]);  
   const [open, setOpen] = useState(false);
 
 
@@ -42,8 +39,11 @@ export const AddDish = ({ isEditing, restaurantId }) => {
       formData.append("description", description);
       formData.append("price", price);
       formData.append("photo", resized);
-      formData.append("tastes", JSON.stringify(tastes));
-      formData.append("restrictions", JSON.stringify(restrictions));
+      formData.append("tastes", JSON.stringify(selectedTastes));
+      formData.append("restrictions", JSON.stringify(selectedRestrictions));
+
+      console.log(selectedTastes);
+      console.log(selectedRestrictions);
 
       const res = await axios.post(`api/dish/${restaurantId}`, formData, {
         headers: {
@@ -51,7 +51,15 @@ export const AddDish = ({ isEditing, restaurantId }) => {
         },
       });
 
-      console.log(res.data);
+
+      setName("");
+      setDescription("");
+      setPrice("");
+      setPhoto("");
+      setSelectedTastes([]);
+      setSelectedRestrictions([]);
+      setOpen(false);
+      window.location.reload();
     } catch (e) {
       console.error(e);
     }
@@ -111,10 +119,10 @@ export const AddDish = ({ isEditing, restaurantId }) => {
               <AddPhoto setImageDef={setPhoto} />
             </div>
             <div className="flex flex-col">
-              <Tastes />
+              <Tastes selectedTastes={selectedTastes} setSelectedTastes={setSelectedTastes} />
             </div>
             <div className="flex flex-col">
-              <Restrictions /> 
+              <Restrictions selectedRestrictions={selectedRestrictions} setSelectedRestrictions={setSelectedRestrictions} />
             </div>
             <div className="flex flex-col justify-center items-center">
               <FormButton title="Add Dish" className={`h-[40px] w-36 text-base mt-3 mb-5`} onClick={handleSubmit}/>

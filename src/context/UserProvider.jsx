@@ -38,6 +38,7 @@ export const UserProvider = ({ children }) => {
     });
 
     axios.get("/api/restaurant").then((res) => {
+      console.log(res.data);
       setRestaurants(res.data);
     });
   }, [token]);
