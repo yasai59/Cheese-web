@@ -6,6 +6,7 @@ import { Input } from "./Input";
 import { AddPhoto } from "./AddPhoto";
 import { Tastes } from "../pages/privatePages/yourRestaurantsComponents/Tastes";
 import { Restrictions } from "../pages/privatePages/yourRestaurantsComponents/Restrictions";
+import { resizeFile } from "../helpers/resizer";
 
 
 const DishesComponent = ({ dishes, editMode }) => {
@@ -18,10 +19,12 @@ const DishesComponent = ({ dishes, editMode }) => {
   const [selectedTastes, setSelectedTastes] = useState([]); 
   const [selectedRestrictions, setSelectedRestrictions] = useState([]);
 
+  console.log(photo);
 
   const removeDish = async (id) => {
     try {
       const res = await axios.delete(`/api/dish/${id}`);
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -32,7 +35,7 @@ const DishesComponent = ({ dishes, editMode }) => {
     setName(dish.name);
     setDescription(dish.description);
     setPrice(dish.price);
-    setPhoto(dish.photo);
+    setPhoto(`${axios.defaults.baseURL}/api/dish/photo/${dish.photo}`);
     setSelectedTastes(dish.tastes);
     setSelectedRestrictions(dish.restrictions);
     setOpen(true);
@@ -40,20 +43,27 @@ const DishesComponent = ({ dishes, editMode }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const resized = await resizeFile(photo);
     try {
       const formData = new FormData();
       formData.append("name", name);
       formData.append("description", description);
       formData.append("price", price);
-      formData.append("photo", photo);
+      formData.append("photo", resized);
       formData.append("tastes", JSON.stringify(selectedTastes));
       formData.append("restrictions", JSON.stringify(selectedRestrictions));
+
+      
 
       const res = await axios.put(`/api/dish/${editedDish.id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
+
+      console.log(res.data);
+      
 
       setOpen(false);
     } catch (error) {
@@ -79,7 +89,7 @@ const DishesComponent = ({ dishes, editMode }) => {
             </div>
             {editMode && (
               <div className="ml-auto">
-                <div onClick={() => removeDish(dish.id)}>
+                <div onClick={() => removeDish(dish.id)} className="cursor-pointer">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="1.5em"
@@ -143,7 +153,10 @@ const DishesComponent = ({ dishes, editMode }) => {
             </div>
             <div className="flex flex-col">
               <label className="text-light text-sm">Photo</label>
-              <AddPhoto setImageDef={setPhoto} />
+              <AddPhoto 
+                setImageDef={setPhoto} 
+                selectedImage={photo}
+              />
             </div>
             <div className="flex flex-col">
               <Tastes 

@@ -1,11 +1,18 @@
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 
-export const AddPhoto = ({ setImageDef }) => {
+export const AddPhoto = ({ setImageDef, selectedImage }) => {
 
   const [image, setImage] = useState(null);
   // generate key to remove and add the same image
   const [inputKey, setInputKey] = useState(0);
+
+  useEffect(() => {
+    selectedImage && setImage(selectedImage);
+    selectedImage == null;
+    console.log(selectedImage);
+  }, [selectedImage])
 
   const handlePickImage = async (event) => {
     const file = event.target.files[0];
@@ -26,7 +33,6 @@ export const AddPhoto = ({ setImageDef }) => {
   return (
     <div className=" relative flex justify-center gap-4 h-24 w-full mt-2">
       <div className="flex justify-center items-center">
-
         {image ? (
           <>
             <button type="button" className="absolute top-0 right-0 text-light font-bold" onClick={() => {

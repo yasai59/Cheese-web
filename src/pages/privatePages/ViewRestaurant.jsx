@@ -13,6 +13,11 @@ export const ViewRestaurant = ({ setEdit }) => {
     (restaurant) => restaurant.id == restaurantId
   );
 
+  if (!restaurant) {
+    return <div>Cargando</div>;
+  }
+
+  console.log(restaurant.dishes)
 
   const isOwner = user.id === restaurant.owner_id;
 
