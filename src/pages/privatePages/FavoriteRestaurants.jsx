@@ -9,7 +9,6 @@ const Restaurant = ({
   onFavorite = () => { },
 }) => {
   return (
-    <Link to={`/restaurant/${restaurant.id}`}>
     <div
       className="bg-base aspect-square rounded-lg p-5"
     >
@@ -28,7 +27,6 @@ const Restaurant = ({
       <p className="text-lime-50 text-center mt-2">{restaurant.name}</p>
       <p className="text-lime-50 text-center font-light">{restaurant.address}</p>
     </div>
-    </Link>
   );
 };
 
