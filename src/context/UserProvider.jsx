@@ -45,6 +45,7 @@ export const UserProvider = ({ children }) => {
     axios.get("/api/restaurant/favorite-restaurants").then((res) => {
       setFavoriteRestaurants(res.data);
     });
+    
   }, [token]);
 
   const login = async (username, password) => {
