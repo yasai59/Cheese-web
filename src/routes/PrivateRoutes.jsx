@@ -36,6 +36,7 @@ export const PrivateRoutes = () => {
             path="/your-restaurant/:restaurantId"
             element={<Restaurant />}
           />
+          <Route path="/restaurant/:restaurantId" element={<ViewRestaurant />} />
           <Route path="/*" element={<Navigate to="/" />} />
         </Routes>
       </div>

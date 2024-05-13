@@ -15,6 +15,7 @@ export const UserProvider = ({ children }) => {
   const [allRestrictions, setAllRestrictions] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
   const [dishes, setDishes] = useState([]);
+  const [favoriteRestaurants, setFavoriteRestaurants] = useState([]);
 
   axios.defaults.baseURL = "https://apicheese.yasai59.com";
   useEffect(() => {
@@ -40,6 +41,9 @@ export const UserProvider = ({ children }) => {
     axios.get("/api/restaurant").then((res) => {
       console.log(res.data);
       setRestaurants(res.data);
+    });
+    axios.get("/api/restaurant/favorite-restaurants").then((res) => {
+      setFavoriteRestaurants(res.data);
     });
   }, [token]);
 
@@ -96,6 +100,29 @@ export const UserProvider = ({ children }) => {
     });
   };
 
+  const toggleFavorite = (restaurant) => {
+    const res = favoriteRestaurants.find((r) => r.id === restaurant.id);
+    if (res) {
+      setFavoriteRestaurants((prev) =>
+        prev.filter((r) => r.id !== restaurant.id)
+      );
+      axios
+        .post("/api/restaurant/favorite-restaurant/" + restaurant.id)
+        .catch(() => {
+          setFavoriteRestaurants((prev) => [...prev, restaurant]);
+        });
+    } else {
+      setFavoriteRestaurants((prev) => [...prev, restaurant]);
+      axios
+        .post("/api/restaurant/favorite-restaurant/" + restaurant.id)
+        .catch(() => {
+          setFavoriteRestaurants((prev) =>
+            prev.filter((r) => r.id !== restaurant.id)
+          );
+        });
+    }
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -116,6 +143,9 @@ export const UserProvider = ({ children }) => {
         dishes,
         setDishes,
         updateAllTastesAndRestrictions,
+        favoriteRestaurants,
+        setFavoriteRestaurants,
+        toggleFavorite,
       }}
     >
       {children}
