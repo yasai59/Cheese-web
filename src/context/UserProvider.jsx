@@ -124,6 +124,20 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const updateRestaurants = () => {
+    axios.get("/api/restaurant").then((res) => {
+      const arr = [];
+
+      res.data.forEach((r) => {
+        if (arr.find((a) => a.id === r.id)) return;
+
+        arr.push(r);
+      });
+
+      setRestaurants(arr);
+    });
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -147,6 +161,7 @@ export const UserProvider = ({ children }) => {
         favoriteRestaurants,
         setFavoriteRestaurants,
         toggleFavorite,
+        updateRestaurants,
       }}
     >
       {children}

@@ -2,42 +2,59 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 
-export const AddPhoto = ({ setImageDef, selectedImage }) => {
+export const AddPhoto = ({ setImageDef, selectedImage, setIsNewImageSelected }) => {
 
   const [image, setImage] = useState(null);
   // generate key to remove and add the same image
   const [inputKey, setInputKey] = useState(0);
 
   useEffect(() => {
-    selectedImage && setImage(selectedImage);
-    selectedImage == null;
-    console.log(selectedImage);
-  }, [selectedImage])
+    if (!image && selectedImage) {
+      setImage(selectedImage);
+    }
+  }, [image, selectedImage]);
 
   const handlePickImage = async (event) => {
     const file = event.target.files[0];
+    console.log("file:" + file);
     if (file) {
         const imageUrl = URL.createObjectURL(file);
+        console.log(image);
         setImage(imageUrl);
-        setImageDef && setImageDef(file)
+        setImageDef && setImageDef(file);
+        setIsNewImageSelected && setIsNewImageSelected(true);
     } else {
       setImage(null);
       setImageDef && setImageDef(null);
+      setIsNewImageSelected && setIsNewImageSelected(false);
     }
+    event.target.value = null;
   }
+
 
   const handleNewImageSelected = () => {
     setInputKey(prevKey => prevKey + 1)
   }
+
+  const handleRemoveImage = () => {
+    setImage(null); 
+    setImageDef && setImageDef(null);
+    setIsNewImageSelected && setIsNewImageSelected(false);
+    document.getElementById("fileInput").value = null;
+  };
 
   return (
     <div className=" relative flex justify-center gap-4 h-24 w-full mt-2">
       <div className="flex justify-center items-center">
         {image ? (
           <>
-            <button type="button" className="absolute top-0 right-0 text-light font-bold" onClick={() => {
-              setImage(null)
-            }}>
+            <button 
+            type="button" 
+            className="absolute top-0 right-0 text-light font-bold" 
+            onClick={() => {
+              handleRemoveImage();
+            }}
+            >
               X
             </button>
             <img id="image" className="w-24 h-24 object-fit rounded-md" src={image} alt="Profile photo"/>
