@@ -135,6 +135,7 @@ export const UserProvider = ({ children }) => {
       });
 
       setRestaurants(arr);
+      console.log(arr);
     });
   };
 

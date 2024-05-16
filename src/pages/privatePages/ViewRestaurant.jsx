@@ -4,8 +4,9 @@ import UserContext from "../../context/UserContext";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import DishesComponent from "../../components/DishesComponent";
+import { ImageCarousel } from "../../components/ImageCarousel";
 
-export const ViewRestaurant = ({ setEdit }) => {
+export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
   const { restaurants } = useContext(UserContext);
   const { user } = useContext(UserContext);
   const { restaurantId } = useParams();
@@ -24,6 +25,8 @@ export const ViewRestaurant = ({ setEdit }) => {
   const handleOrderClick = (src) => {
     window.open(src, "_blank");
   };
+
+  const [carousel, setCarousel] = React.useState(restaurant.carousel);
 
   const GlovoBtn = ({ src }) => {
     return (
@@ -127,7 +130,7 @@ export const ViewRestaurant = ({ setEdit }) => {
             <div className="flex justify-center items-center">
               <img
                 className="h-36 w-36 rounded-full object-cover border border-light"
-                src={`${axios.defaults.baseURL}/api/restaurant/profilephoto/${restaurant.photo}`}
+                src={newImageUrl ? newImageUrl : `${axios.defaults.baseURL}/api/restaurant/profilephoto/${restaurant.photo}`}
               ></img>
             </div>
             <div className="py-4">
@@ -141,6 +144,20 @@ export const ViewRestaurant = ({ setEdit }) => {
           editMode={false}
           restaurantId={restaurantId}
         />
+        {/* Carousel */}
+        <div className="flex flex-col gap-2 p-4">
+          <label className="text-primary">Carousel</label>
+          <div className="flex justify-center items-center">
+            {/* {restaurant.carousel.map((image, index) => (
+              <img
+                key={index}
+                className="h-36 w-36 rounded-full object-cover border border-light"
+                src={`${axios.defaults.baseURL}/api/restaurant/carousel/${image}`}
+                alt={`Carousel Image ${index + 1}`}
+              />
+            ))} */}
+          </div>
+        </div>
         {/* Links + Orders */}
         <div id="links" className="flex flex-col gap-2 p-4">
           <>

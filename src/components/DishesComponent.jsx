@@ -56,21 +56,10 @@ const DishesComponent = ({ dishes, editMode }) => {
       formData.append("id", id)
       formData.append("name", name);
       formData.append("price", price);
-
       if (isNewImageSelected) {
         const resized = await resizeFile(photo);
         formData.append("photo", resized);
       }
-      // if (typeof photo === 'string') {
-      //   // Si es una URL (imagen existente), simplemente agrega la URL al FormData
-      //   console.log("string");
-      //   formData.append("photo", photo);
-      // } else {
-      //   // Si es un Blob (imagen nueva), redimensiona y agrega el Blob al FormData
-      //   console.log("blob");
-      //   const resized = await resizeFile(photo);
-      //   formData.append("photo", resized);
-      // }      
       formData.append("description", description);
       formData.append("tastes", JSON.stringify(selectedTastes));
       formData.append("restrictions", JSON.stringify(selectedRestrictions));
@@ -81,11 +70,8 @@ const DishesComponent = ({ dishes, editMode }) => {
         },
       });
 
-      console.log(res.data);
-
-
       setOpen(false);
-      updateRestaurants();      
+      updateRestaurants();
     } catch (error) {
       console.error(error);
     }
@@ -94,51 +80,55 @@ const DishesComponent = ({ dishes, editMode }) => {
   return (
     <>
       <div id="dishes" className="flex flex-col border-b border-base-light p-4">
-        {dishes.map((dish) => (
-          <div key={dish.id} className="flex py-4 gap-4">
-            <div>
-              <img
-                className="h-20 w-20 rounded"
-                src={`${axios.defaults.baseURL}/api/dish/photo/${dish.photo}`}
-                alt={dish.name}
-              />
-            </div>
-            <div>
-              <p className="text-white font-bold text-lg">{dish.name}</p>
-              <p className="text-light">{dish.price}€</p>
-            </div>
-            {editMode && (
-              <div className="ml-auto">
-                <div onClick={() => removeDish(dish.id)} className="cursor-pointer">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.5em"
-                    height="1.5em"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                    />
-                  </svg>
-                </div>
-                <div onClick={() => editDish(dish)}>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="1.5em"
-                    height="1.5em"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fill="currentColor"
-                      d="m14.06 9l.94.94L5.92 19H5v-.92zm3.6-6c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"
-                    />
-                  </svg>
-                </div>
+        <label className="text-primary">Dishes</label>
+        {dishes.length === 0 && <p className="text-light text-center">No dishes available</p>}
+        <div className="md:grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {dishes.map((dish) => (
+            <div key={dish.id} className="flex py-4 gap-4">
+              <div>
+                <img
+                  className="h-20 w-20 rounded"
+                  src={`${axios.defaults.baseURL}/api/dish/photo/${dish.photo}`}
+                  alt={dish.name}
+                />
               </div>
-            )}
-          </div>
-        ))}
+              <div>
+                <p className="text-white font-bold text-lg">{dish.name}</p>
+                <p className="text-light">{dish.price}€</p>
+              </div>
+              {editMode && (
+                <div className="ml-auto">
+                  <div onClick={() => removeDish(dish.id)} className="cursor-pointer">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1.5em"
+                      height="1.5em"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                      />
+                    </svg>
+                  </div>
+                  <div onClick={() => editDish(dish)}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="1.5em"
+                      height="1.5em"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        fill="currentColor"
+                        d="m14.06 9l.94.94L5.92 19H5v-.92zm3.6-6c-.25 0-.51.1-.7.29l-1.83 1.83l3.75 3.75l1.83-1.83c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.2-.2-.45-.29-.71-.29m-3.6 3.19L3 17.25V21h3.75L17.81 9.94z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
       <Modal open={open} setOpen={setOpen}>
         <div className="bg-base-dark rounded-lg border-2 border-base relative">
@@ -176,7 +166,7 @@ const DishesComponent = ({ dishes, editMode }) => {
               <AddPhoto
                 setImageDef={setPhoto}
                 selectedImage={photo}
-                setIsNewImageSelected={setIsNewImageSelected} 
+                setIsNewImageSelected={setIsNewImageSelected}
               />
             </div>
             <div className="flex flex-col">

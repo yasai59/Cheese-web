@@ -11,7 +11,7 @@ import { LinkButton } from "../../components/LinkButton";
 import { useRef } from "react";
 import { AddDish } from "./AddDish";
 
-export const EditRestaurant = ({ setEdit }) => {
+export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
   const { restaurants } = useContext(UserContext);
   const { user } = useContext(UserContext);
   const { restaurantId } = useParams();
@@ -19,23 +19,18 @@ export const EditRestaurant = ({ setEdit }) => {
     (restaurant) => restaurant.id == restaurantId
   );
   const [dishes, setDishes] = useState(restaurant.dishes);
+  const [url, setUrl] = useState(restaurant.photo);
+  const [newImage, setNewImage] = useState(false);
 
   const isOwner = user.id === restaurant.owner_id;
+  const image = useRef(null);
+
+  
 
   const handleEdit = () => {
     setEdit(false);
   };
 
-  const image = useRef(null);
-
-  /* Mostrar imagen al editar una existente */
-  const urlImagen = `${axios.defaults.baseURL}/api/restaurant/profilephoto/${restaurant.photo}`;
-  const styles = {
-    backgroundImage: `url(${urlImagen})`,
-    backgroundPosition: "center",
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-  };
 
   const handleChangeImage = () => {
     const input = document.createElement("input");
@@ -57,7 +52,12 @@ export const EditRestaurant = ({ setEdit }) => {
           }
         );
         const url = URL.createObjectURL(file);
-        image.current.style.backgroundImage = `url(${url})`;
+        image.current.src = url;
+        console.log(url);
+        setNewImage(true);
+        setUrl(url);
+        setNewImageUrl(url);
+        setEdit(false);
       } catch (error) {
         console.error(error);
       }
@@ -89,12 +89,9 @@ export const EditRestaurant = ({ setEdit }) => {
   }, []);
 
   const [glovoLink, setGlovoLink] = useState(restaurant.link_glovo || "");
-  const [uberEatsLink, setUberEatsLink] = useState(
-    restaurant.link_uber_eats || ""
-  );
-  const [justEatLink, setJustEatLink] = useState(
-    restaurant.link_just_eat || ""
-  );
+  const [uberEatsLink, setUberEatsLink] = useState(restaurant.link_uber_eats || "");
+  const [justEatLink, setJustEatLink] = useState(restaurant.link_just_eat || "");
+
 
   return (
     <>
@@ -102,7 +99,12 @@ export const EditRestaurant = ({ setEdit }) => {
       <div className="w-full mx-auto flex flex-col">
         <div id="header" className="h-full border-b border-base-light">
           <div className="flex flex-col px-4">
-            <button className="bg-primary flex justify-center items-center p-1 rounded w-16 text-base-dark mt-6">
+            <button
+              className="bg-primary flex justify-center items-center p-1 rounded w-16 text-base-dark mt-6"
+              onClick={() => {
+
+              }}
+            >
               Save
             </button>
             <div className="flex justify-between items-center">
@@ -123,15 +125,17 @@ export const EditRestaurant = ({ setEdit }) => {
                 </svg>
               </div>
             </div>
+
             {/* Image */}
             <div className="flex justify-center items-center">
-              <div
-                className="w-36 h-36 rounded-full cursor-pointer mx-auto border border-light bg-center bg-cover bg-no-repeat"
+              <img
                 ref={image}
+                className="w-36 h-36 rounded-full cursor-pointer mx-auto border border-light"
+                src={newImage ? newImage : ""}
                 onClick={handleChangeImage}
-                style={styles}
-              ></div>
+              />
             </div>
+
             <div className="py-4">
               <input
                 type="text"

@@ -75,7 +75,7 @@ export const AddRestaurant = () => {
                             setValue={setName}
                         />
                     </div>
-                    <div className="w-full sm:hidden md:block">
+                    <div className="w-full hidden md:block">
                         <label className="text-light text-sm" htmlFor="">Phone number</label>
                         <Input
                             type="tel"

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import UserContext from "../../context/UserContext";
 import { Modal } from "../../components/Modal";
 import { Input } from "../../components/Input";
 import { AddPhoto } from "../../components/AddPhoto";
@@ -9,7 +10,7 @@ import { resizeFile } from "../../helpers/resizer";
 import axios from "axios";
 
 export const AddDish = ({ isEditing, restaurantId }) => {
-
+  const { updateRestaurants } = useContext(UserContext);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
@@ -59,7 +60,7 @@ export const AddDish = ({ isEditing, restaurantId }) => {
       setSelectedTastes([]);
       setSelectedRestrictions([]);
       setOpen(false);
-      window.location.reload();
+      updateRestaurants();
     } catch (e) {
       console.error(e);
     }
