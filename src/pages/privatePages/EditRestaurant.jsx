@@ -25,7 +25,7 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
   const isOwner = user.id === restaurant.owner_id;
   const image = useRef(null);
 
-  
+
 
   const handleEdit = () => {
     setEdit(false);
@@ -72,25 +72,23 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
   const [carousel, setCarousel] = useState([]);
   useEffect(() => {
     axios
-      .get("/api/restaurant/carousel/" + restaurant.id)
-      .then((res) => {
-        const images = res.data.map((image) => {
-          return {
-            uri: `${axios.defaults.baseURL}/api/restaurant/carousel/${image}`,
-            type: "image/png",
-            name: image,
-          };
-        });
-        setCarousel(images);
+      .get(`/api/restaurant/carousel/${restaurantId}`)
+      .then((response) => {
+        setCarousel(response.data.map((img) => ({
+          name: img,
+          imageUrl: `${axios.defaults.baseURL}/api/restaurant/carousel/photo/${img}`
+        })));
       })
-      .catch((err) => {
-        console.error(err);
+      .catch((error) => {
+        console.error("Error fetching carousel images:", error);
       });
-  }, []);
+      console.log("carousel", carousel);
+  }, [restaurantId]);
 
   const [glovoLink, setGlovoLink] = useState(restaurant.link_glovo || "");
   const [uberEatsLink, setUberEatsLink] = useState(restaurant.link_uber_eats || "");
   const [justEatLink, setJustEatLink] = useState(restaurant.link_just_eat || "");
+
 
 
   return (
@@ -157,7 +155,7 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
         {/* Carousel */}
         <div className="flex flex-col gap-2 p-4">
           <label className="text-primary">Carousel</label>
-          <ImageCarousel setDefCarousel={setCarousel} />
+          <ImageCarousel setDefCarousel={setCarousel} initialImages={carousel} />
         </div>
         <hr className="border-b-1 border-base-light" />
         {/* Links + Orders */}

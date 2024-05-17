@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { resizeFile } from "../helpers/resizer";
-
 
 const ItemCarousel = ({ image, handleDelete }) => {
     return (
         <div className="relative">
-            <img key={image.name} src={image.imageUrl} alt="Carousel Image" className="w-28 h-28 rounded-xl" />
-
+            <img src={image.imageUrl} alt="Carousel Image" className="w-28 h-28 rounded-xl" />
             <button
                 type="button"
                 className="absolute top-[2px] right-[4px] bg-white rounded-full"
@@ -18,9 +17,10 @@ const ItemCarousel = ({ image, handleDelete }) => {
     );
 }
 
-export const ImageCarousel = ({ setDefCarousel = () => { } }) => {
-    const [images, setImages] = useState([]);
+export const ImageCarousel = ({ setDefCarousel = () => {}, initialImages = [] }) => {
+    const [images, setImages] = useState(initialImages);
 
+    console.log("images", images);
 
     const handlePickImage = async (e) => {
         const file = e.target.files[0];
@@ -28,19 +28,13 @@ export const ImageCarousel = ({ setDefCarousel = () => { } }) => {
         const imageUrl = URL.createObjectURL(file);
         const resized = await resizeFile(file);
         
-        
-
-        setImages(prevImages => {
-            const arr = [...prevImages, {resized, imageUrl: imageUrl}];
-            return arr;
-        });
+        setImages(prevImages => [...prevImages, { resized, imageUrl }]);
         e.target.value = null;
     };
-    
 
     useEffect(() => {
         setDefCarousel(images);
-    }, [images]);
+    }, [images, setDefCarousel]);
 
     const handleDelete = (imageUri) => {
         setImages(prevImages => prevImages.filter(img => img !== imageUri));

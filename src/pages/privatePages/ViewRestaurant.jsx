@@ -1,10 +1,11 @@
 import React from "react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import UserContext from "../../context/UserContext";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import DishesComponent from "../../components/DishesComponent";
 import { ImageCarousel } from "../../components/ImageCarousel";
+import { useEffect } from "react";
 
 export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
   const { restaurants } = useContext(UserContext);
@@ -18,15 +19,27 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
     return <div>Cargando</div>;
   }
 
-  console.log(restaurant.dishes)
-
   const isOwner = user.id === restaurant.owner_id;
 
   const handleOrderClick = (src) => {
     window.open(src, "_blank");
   };
 
-  const [carousel, setCarousel] = React.useState(restaurant.carousel);
+  const [carouselImages, setCarouselImages] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`/api/restaurant/carousel/${restaurantId}`)
+      .then((response) => {
+        setCarouselImages(response.data.map((img) => ({
+          name: img,
+          imageUrl: `${axios.defaults.baseURL}/api/restaurant/carousel/photo/${img}`
+        })));
+      })
+      .catch((error) => {
+        console.error("Error fetching carousel images:", error);
+      });
+  }, [restaurantId]);
 
   const GlovoBtn = ({ src }) => {
     return (
@@ -144,45 +157,43 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
           editMode={false}
           restaurantId={restaurantId}
         />
+
         {/* Carousel */}
-        <div className="flex flex-col gap-2 p-4">
+        <div className="flex flex-col gap-2 p-4 border-b border-base-light">
           <label className="text-primary">Carousel</label>
-          <div className="flex justify-center items-center">
-            {/* {restaurant.carousel.map((image, index) => (
-              <img
-                key={index}
-                className="h-36 w-36 rounded-full object-cover border border-light"
-                src={`${axios.defaults.baseURL}/api/restaurant/carousel/${image}`}
-                alt={`Carousel Image ${index + 1}`}
-              />
-            ))} */}
+          <div className="flex flex-wrap gap-3">
+          {carouselImages.map((image, index) => (
+              <div key={index} className="relative">
+                <img src={image.imageUrl} alt="Carousel Image" className="w-28 h-28 rounded-xl" />
+              </div>
+            ))}
           </div>
         </div>
-        {/* Links + Orders */}
-        <div id="links" className="flex flex-col gap-2 p-4">
-          <>
-            <label className="text-primary">Order</label>
-            <div className="flex flex-col items-center gap-2">
-              {restaurant.link_glovo && (
-                <GlovoBtn src={restaurant.link_glovo} />
+      {/* Links + Orders */ }
+      < div id = "links" className = "flex flex-col gap-2 p-4" >
+        <>
+          <label className="text-primary">Order</label>
+          <div className="flex flex-col items-center gap-2">
+            {restaurant.link_glovo && (
+              <GlovoBtn src={restaurant.link_glovo} />
+            )}
+            {restaurant.link_uber_eats && (
+              <UberEatsBtn src={restaurant.link_uber_eats} />
+            )}
+            {restaurant.link_just_eat && (
+              <JustEatBtn src={restaurant.link_just_eat} />
+            )}
+            {!restaurant.link_glovo &&
+              !restaurant.link_uber_eats &&
+              !restaurant.link_just_eat && (
+                <p className="text-light text-center">
+                  No delivery services available for this restaurant
+                </p>
               )}
-              {restaurant.link_uber_eats && (
-                <UberEatsBtn src={restaurant.link_uber_eats} />
-              )}
-              {restaurant.link_just_eat && (
-                <JustEatBtn src={restaurant.link_just_eat} />
-              )}
-              {!restaurant.link_glovo &&
-                !restaurant.link_uber_eats &&
-                !restaurant.link_just_eat && (
-                  <p className="text-light text-center">
-                    No delivery services available for this restaurant
-                  </p>
-                )}
-            </div>
-          </>
-        </div>
-      </div>
+          </div>
+        </>
+        </div >
+      </div >
     </>
   );
 };
