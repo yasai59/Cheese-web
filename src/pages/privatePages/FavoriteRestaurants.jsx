@@ -1,28 +1,35 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import UserContext from '../../context/UserContext';
-import { Link } from 'react-router-dom';
 
-const Restaurant = ({
-  restaurant,
-  isFavourite = false,
-  onFavorite = () => { },
+const Restaurant = ({ 
+  restaurant, 
+  isFavourite = false, 
+  onFavorite = () => {}, 
+  onClick = () => {} 
 }) => {
+  const handleFavoriteClick = (e) => {
+    e.stopPropagation();
+    onFavorite(restaurant);
+  };
+
   return (
     <div
-      className="bg-base aspect-square rounded-lg p-5"
+      className="bg-base aspect-square rounded-lg p-5 relative cursor-pointer"
+      onClick={onClick}
     >
-      <div className="self-end" onClick={onFavorite}>
+      <div className="absolute top-2 right-2 z-10" onClick={handleFavoriteClick}>
         {isFavourite ? (
           <span role="img" aria-label="star" style={{ fontSize: '24px' }}>⭐️</span>
         ) : (
           <span role="img" aria-label="star" style={{ fontSize: '24px' }}>☆</span>
         )}
       </div>
-
       <img
         src={`${axios.defaults.baseURL}/api/restaurant/profilephoto/${restaurant.photo}`}
         className="w-16 h-16 rounded-xl mx-auto mt-2"
+        alt={restaurant.name}
       />
       <p className="text-lime-50 text-center mt-2">{restaurant.name}</p>
       <p className="text-lime-50 text-center font-light">{restaurant.address}</p>
@@ -31,15 +38,17 @@ const Restaurant = ({
 };
 
 export const FavoriteRestaurants = () => {
-  const { favoriteRestaurants, toggleFavorite } =
-    useContext(UserContext);
-
+  const { favoriteRestaurants, addRestaurant, toggleFavorite } = useContext(UserContext);
   const [search, setSearch] = useState("");
-
-  console.log(favoriteRestaurants);
+  const navigate = useNavigate();
 
   const handleFavorite = (restaurant) => {
     toggleFavorite(restaurant);
+  };
+
+  const handleClick = (restaurant) => {
+    addRestaurant(restaurant);
+    navigate(`/restaurant/${restaurant.id}`);
   };
 
   return (
@@ -65,12 +74,11 @@ export const FavoriteRestaurants = () => {
               <Restaurant
                 restaurant={restaurant}
                 isFavourite={true}
-                onPress={() => handlePress(restaurant)}
                 onFavorite={() => handleFavorite(restaurant)}
+                onClick={() => handleClick(restaurant)}
               />
             </div>
-          ))
-        }
+          ))}
       </div>
     </div>
   );

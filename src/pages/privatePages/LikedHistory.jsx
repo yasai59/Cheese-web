@@ -1,18 +1,27 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import UserContext from '../../context/UserContext';
-import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+
 
 const Restaurant = ({
   restaurant,
   isFavorite = false,
   onFavorite = () => { },
+  onClick = () => { },
 }) => {
+  const handleFavoriteClick = (e) => {
+    e.stopPropagation();
+    onFavorite(restaurant);
+  };
   return (
-    
-      <div className="bg-base aspect-square rounded-lg p-5">
-        <div className="self-end" onClick={onFavorite}>
+      <div 
+        className="bg-base aspect-square rounded-lg p-5 cursor-pointer relative"
+        onClick={onClick}
+      >
+        <div className="absolute top-2 right-2 z-10" onClick={handleFavoriteClick}>
           {isFavorite ? (
             <span role="img" aria-label="star" style={{ fontSize: '24px' }}>⭐️</span>
           ) : (
@@ -33,7 +42,8 @@ const Restaurant = ({
 
 export const LikedHistory = () => {
   const [likedRestaurants, setLikedRestaurants] = useState([]);
-  const { favoriteRestaurants, toggleFavorite } = useContext(UserContext);
+  const { favoriteRestaurants, toggleFavorite, addRestaurant } = useContext(UserContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get('/api/restaurant/liked-restaurants').then((res) => {
@@ -45,6 +55,11 @@ export const LikedHistory = () => {
     toggleFavorite(restaurant);
   };
 
+  const handleClick = (restaurant) => {
+    addRestaurant(restaurant);
+    navigate(`/restaurant/${restaurant.id}`);
+  }
+
   return (
     <div className="flex-1 bg-base-dark p-3">
       <h1 className="text-light text-4xl font-bold">Liked Restaurants</h1>
@@ -55,6 +70,7 @@ export const LikedHistory = () => {
               restaurant={restaurant}
               isFavorite={favoriteRestaurants && favoriteRestaurants.some((res) => res.id === restaurant.id)}
               onFavorite={() => handleFavorite(restaurant)}
+              onClick={() => handleClick(restaurant)}
             />
           </div>
         ))}

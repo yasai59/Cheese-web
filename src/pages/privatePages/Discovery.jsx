@@ -53,21 +53,20 @@ export const Discovery = () => {
 
   if (final) {
     return (
-      <div className="flex-1 bg-base-dark border-t border-base-light">
+      <div className="flex-1 h-screen bg-base-dark border-t border-base-light">
         <LikedHistory restaurants={arrLiked} handleNext={handleUpdate} />
       </div>
     );
   }
 
   return (
-    <div className="flex-1 bg-base-dark border-t border-base-light">
-      {restaurants === "No restaurants found" && (
-        <div className="flex-1 items-center justify-center">
+    <div className="flex-1 h-screen bg-base-dark border-t border-base-light flex flex-col items-center justify-center">
+      {restaurants === "No restaurants found" ? (
+        <div className="flex flex-col items-center justify-center h-full">
           <p className="text-light text-2xl">We ran out of restaurants!</p>
           <p className="text-light text-lg">Come tomorrow to see more!</p>
         </div>
-      )}
-      {restaurants.length === 0 ? (
+      ) : restaurants.length === 0 ? (
         <Loading isLoading={true} />
       ) : (
         <RestaurantCard restaurant={restaurants[activeRestaurant]} goNext={goNext} />

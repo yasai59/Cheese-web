@@ -5,7 +5,10 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 export const YourRestaurants = () => {
-  const { restaurants } = useContext(UserContext);
+  let { restaurants } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+
+  restaurants = restaurants.filter((restaurant) => restaurant.owner_id === user.id);
   return (
     <>
       <div className="w-full mx-auto flex flex-col py-4">

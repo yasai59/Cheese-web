@@ -18,10 +18,10 @@ const Loading = ({ isLoading = false }) => {
   if (!isLoading) return null;
 
   return (
-    <div className="absolute z-10 bg-opacity-60 bg-black w-full h-full flex items-center justify-center">
+    <div className="fixed z-10 inset-0 bg-opacity-60 bg-black flex items-center justify-center overflow-hidden">
       <div className="bg-primary bg-opacity-80 rounded-full w-20 h-20 flex items-center justify-center">
         <div
-          className="w-13 h-13 text-center"
+          className="w-13 h-13 text-center text-base-light font-bold"
           style={{ transform: `rotate(${spin}deg)` }}
         >
           Loading...

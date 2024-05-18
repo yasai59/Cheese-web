@@ -1,5 +1,4 @@
-import React, { useState, useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import { Modal } from "./Modal";
 import { Input } from "./Input";
@@ -9,8 +8,7 @@ import { Restrictions } from "../pages/privatePages/yourRestaurantsComponents/Re
 import { resizeFile } from "../helpers/resizer";
 import UserContext from "../context/UserContext";
 
-
-const DishesComponent = ({ dishes, editMode }) => {
+const DishesComponent = ({ dishes = [], editMode }) => {
   const { updateRestaurants } = useContext(UserContext);
 
   const [open, setOpen] = useState(false);
@@ -24,11 +22,11 @@ const DishesComponent = ({ dishes, editMode }) => {
   const [selectedRestrictions, setSelectedRestrictions] = useState([]);
   const [isNewImageSelected, setIsNewImageSelected] = useState(false);
 
-  console.log(photo);
+  
 
   const removeDish = async (id) => {
     try {
-      const res = await axios.delete(`/api/dish/${id}`);
+      await axios.delete(`/api/dish/${id}`);
       updateRestaurants();
     } catch (error) {
       console.error(error);
@@ -36,9 +34,8 @@ const DishesComponent = ({ dishes, editMode }) => {
   }
 
   const editDish = (dish) => {
-    console.log(isNewImageSelected);
     setEditedDish(dish);
-    setId(dish.id)
+    setId(dish.id);
     setName(dish.name);
     setDescription(dish.description);
     setPrice(dish.price);
@@ -53,7 +50,7 @@ const DishesComponent = ({ dishes, editMode }) => {
 
     try {
       const formData = new FormData();
-      formData.append("id", id)
+      formData.append("id", id);
       formData.append("name", name);
       formData.append("price", price);
       if (isNewImageSelected) {
@@ -64,7 +61,7 @@ const DishesComponent = ({ dishes, editMode }) => {
       formData.append("tastes", JSON.stringify(selectedTastes));
       formData.append("restrictions", JSON.stringify(selectedRestrictions));
 
-      const res = await axios.put(`/api/dish/${editedDish.id}`, formData, {
+      await axios.put(`/api/dish/${editedDish.id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

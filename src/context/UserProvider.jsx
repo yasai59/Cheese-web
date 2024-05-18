@@ -139,6 +139,14 @@ export const UserProvider = ({ children }) => {
     });
   };
 
+  const addRestaurant = (restaurant) => {
+    setRestaurants(prevRestaurants => {
+      const exists = prevRestaurants.some(r => r.id == restaurant.id);
+      if (exists) return prevRestaurants;
+      return [...prevRestaurants, restaurant];
+    });
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -163,6 +171,7 @@ export const UserProvider = ({ children }) => {
         setFavoriteRestaurants,
         toggleFavorite,
         updateRestaurants,
+        addRestaurant,
       }}
     >
       {children}
