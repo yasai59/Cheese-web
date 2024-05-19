@@ -16,6 +16,8 @@ export const UserProvider = ({ children }) => {
   const [restaurants, setRestaurants] = useState([]);
   const [dishes, setDishes] = useState([]);
   const [favoriteRestaurants, setFavoriteRestaurants] = useState([]);
+  const [reasons, setReasons] = useState([]);
+  const [allReasons, setAllReasons] = useState([]);
 
   axios.defaults.baseURL = "https://apicheese.yasai59.com";
   useEffect(() => {
@@ -44,6 +46,9 @@ export const UserProvider = ({ children }) => {
     });
     axios.get("/api/restaurant/favorite-restaurants").then((res) => {
       setFavoriteRestaurants(res.data);
+    });
+    axios.get("/api/reason/getAll").then((res) => {
+      setAllReasons(res.data.reasons);
     });
     
   }, [token]);
@@ -172,6 +177,10 @@ export const UserProvider = ({ children }) => {
         toggleFavorite,
         updateRestaurants,
         addRestaurant,
+        reasons,
+        setReasons,
+        allReasons,
+        setAllReasons,
       }}
     >
       {children}
