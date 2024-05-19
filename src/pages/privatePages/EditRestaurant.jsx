@@ -1,75 +1,27 @@
-import React from "react";
-import { useContext } from "react";
-import UserContext from "../../context/UserContext";
-import axios from "axios";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useState } from "react";
-import { useEffect } from "react";
+import axios from "axios";
+import UserContext from "../../context/UserContext";
 import DishesComponent from "../../components/DishesComponent";
 import { ImageCarousel } from "../../components/ImageCarousel";
 import { LinkButton } from "../../components/LinkButton";
-import { useRef } from "react";
 import { AddDish } from "./AddDish";
 
 export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
-  const { restaurants } = useContext(UserContext);
-  const { user } = useContext(UserContext);
+  const { restaurants, setRestaurants } = useContext(UserContext);
   const { restaurantId } = useParams();
-  const restaurant = restaurants.find(
-    (restaurant) => restaurant.id == restaurantId
-  );
-  const [dishes, setDishes] = useState(restaurant.dishes);
-  const [url, setUrl] = useState(restaurant.photo);
-  const [newImage, setNewImage] = useState(false);
-
-  const isOwner = user.id === restaurant.owner_id;
+  const restaurant = restaurants.find((restaurant) => restaurant.id == restaurantId);
+  const [dishes, setDishes] = useState(restaurant.dishes || []);
+  const [url, setUrl] = useState(restaurant.photo || "");
+  const [newImage, setNewImage] = useState(null);
+  const [restaurantAddress, setRestaurantAddress] = useState(restaurant.address || "");
+  const [phoneNumber, setPhoneNumber] = useState(restaurant.phone_number || "");
+  const [glovoLink, setGlovoLink] = useState(restaurant.link_glovo || "");
+  const [uberEatsLink, setUberEatsLink] = useState(restaurant.link_uber_eats || "");
+  const [justEatLink, setJustEatLink] = useState(restaurant.link_just_eat || "");
+  const [carousel, setCarousel] = useState([]);
   const image = useRef(null);
 
-
-
-  const handleEdit = () => {
-    setEdit(false);
-  };
-
-
-  const handleChangeImage = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.accept = "image/*";
-    input.onchange = async (e) => {
-      const file = e.target.files[0];
-      const formData = new FormData();
-      formData.append("photo", file);
-      formData.append("id", restaurant.id);
-      try {
-        await axios.post(
-          `/api/restaurant/photo/profile-picture/${restaurant.id}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        const url = URL.createObjectURL(file);
-        image.current.src = url;
-        console.log(url);
-        setNewImage(true);
-        setUrl(url);
-        setNewImageUrl(url);
-        setEdit(false);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    input.click();
-  };
-
-  const [restaurantAddress, setRestaurantAddress] = useState(
-    restaurant.address
-  );
-
-  const [carousel, setCarousel] = useState([]);
   useEffect(() => {
     axios
       .get(`/api/restaurant/carousel/${restaurantId}`)
@@ -82,26 +34,73 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
       .catch((error) => {
         console.error("Error fetching carousel images:", error);
       });
-      console.log("carousel", carousel);
   }, [restaurantId]);
 
-  const [glovoLink, setGlovoLink] = useState(restaurant.link_glovo || "");
-  const [uberEatsLink, setUberEatsLink] = useState(restaurant.link_uber_eats || "");
-  const [justEatLink, setJustEatLink] = useState(restaurant.link_just_eat || "");
+  const handleEdit = () => {
+    setEdit(false);
+  };
 
+  const handleChangeImage = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      setNewImage(file); // Guardar la nueva imagen en el estado
+      const url = URL.createObjectURL(file);
+      image.current.src = url;
+      setUrl(url);
+    };
+    input.click();
+  };
 
+  const handleSave = async () => {
+    console.log("Handle Save called");
+
+    const formData = new FormData();
+    formData.append("id", restaurant.id);
+    formData.append("address", restaurantAddress);
+    formData.append("phone_number", phoneNumber);
+    formData.append("link_glovo", glovoLink);
+    formData.append("link_uber_eats", uberEatsLink);
+    formData.append("link_just_eat", justEatLink);
+    formData.append("carousel_images", JSON.stringify(carousel.map(img => img.name))); // Guardar como JSON
+    if (newImage) {
+      formData.append("photo", newImage); // Agregar la nueva imagen si existe
+    }
+
+    console.log("FormData Entries:", Array.from(formData.entries()));
+
+    try {
+      const response = await axios.put(`/api/restaurant `, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("Save Response:", response.data);
+
+      // Actualiza el estado global de los restaurantes
+      setRestaurants((prevRestaurants) =>
+        prevRestaurants.map((rest) =>
+          rest.id === restaurant.id ? { ...rest, ...response.data } : rest
+        )
+      );
+
+      setEdit(false);
+    } catch (error) {
+      console.error("Error updating restaurant:", error);
+    }
+  };
 
   return (
     <>
-      {/* Header */}
       <div className="w-full mx-auto flex flex-col">
         <div id="header" className="h-full border-b border-base-light">
           <div className="flex flex-col px-4">
             <button
               className="bg-primary flex justify-center items-center p-1 rounded w-16 text-base-dark mt-6"
-              onClick={() => {
-
-              }}
+              onClick={handleSave}
             >
               Save
             </button>
@@ -109,7 +108,7 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
               <h1 className="text-4xl text-light font-bold my-5">
                 {restaurant.name}
               </h1>
-              <div className="cursor-pointer" onClick={() => handleEdit()}>
+              <div className="cursor-pointer" onClick={handleEdit}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="2em"
@@ -129,7 +128,7 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
               <img
                 ref={image}
                 className="w-36 h-36 rounded-full cursor-pointer mx-auto border border-light"
-                src={newImage ? newImage : ""}
+                src={url}
                 onClick={handleChangeImage}
               />
             </div>
@@ -142,23 +141,27 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
                 onChange={(e) => setRestaurantAddress(e.target.value)}
               />
             </div>
+            <div className="py-4">
+              <input
+                type="tel"
+                value={phoneNumber}
+                className="p-1 rounded-sm"
+                onChange={(e) => setPhoneNumber(e.target.value)}
+              />
+            </div>
           </div>
         </div>
-        {/* Menu + AddDish */}
         <AddDish isEditing={true} restaurantId={restaurant.id} />
-        {/* Dishes */}
         <DishesComponent
           dishes={dishes}
           editMode={true}
           restaurantId={restaurantId}
         />
-        {/* Carousel */}
         <div className="flex flex-col gap-2 p-4">
           <label className="text-primary">Carousel</label>
           <ImageCarousel setDefCarousel={setCarousel} initialImages={carousel} />
         </div>
         <hr className="border-b-1 border-base-light" />
-        {/* Links + Orders */}
         <div id="links" className="flex flex-col gap-2 p-4">
           <div className="flex flex-col gap-2">
             <label className="text-primary">Links</label>
@@ -166,17 +169,17 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
               src="glovo-icon"
               originalText={glovoLink}
               onSave={setGlovoLink}
-            ></LinkButton>
+            />
             <LinkButton
               src="uber-eats-icon"
               originalText={uberEatsLink}
               onSave={setUberEatsLink}
-            ></LinkButton>
+            />
             <LinkButton
               src="just-eat-icon"
               originalText={justEatLink}
               onSave={setJustEatLink}
-            ></LinkButton>
+            />
           </div>
         </div>
       </div>
