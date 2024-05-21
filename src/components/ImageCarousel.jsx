@@ -18,7 +18,13 @@ const ItemCarousel = ({ image, handleDelete }) => {
 }
 
 export const ImageCarousel = ({ setDefCarousel = () => {}, initialImages = [] }) => {
+    console.log("initialImages", initialImages);
     const [images, setImages] = useState(initialImages);
+
+    useEffect(() => {
+        setImages(initialImages);
+    }, [initialImages])
+
 
     console.log("images", images);
 

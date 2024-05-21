@@ -11,6 +11,7 @@ import { HeaderMobile } from "../components/HeaderMobile";
 import { AddRestaurant } from "../pages/privatePages/AddRestaurant";
 import { ViewRestaurant } from "../pages/privatePages/ViewRestaurant";
 import { Restaurant } from "../pages/privatePages/Restaurant";
+import { DishScreen } from "../pages/privatePages/DishScreen";
 
 export const PrivateRoutes = () => {
   return (
@@ -37,6 +38,7 @@ export const PrivateRoutes = () => {
             element={<Restaurant />}
           />
           <Route path="/restaurant/:restaurantId" element={<ViewRestaurant />} />
+          <Route path="/dish/:dishId" element={<DishScreen />}></Route>
           <Route path="/*" element={<Navigate to="/" />} />
         </Routes>
       </div>

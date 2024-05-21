@@ -7,11 +7,12 @@ import { Tastes } from "../pages/privatePages/yourRestaurantsComponents/Tastes";
 import { Restrictions } from "../pages/privatePages/yourRestaurantsComponents/Restrictions";
 import { resizeFile } from "../helpers/resizer";
 import UserContext from "../context/UserContext";
+import { Link } from "react-router-dom";
 
 const DishesComponent = ({ dishes = [], editMode }) => {
   const { updateRestaurants } = useContext(UserContext);
-
   const [open, setOpen] = useState(false);
+  const [openDishScreen, setOpenDishScreen] = useState(false);
   const [editedDish, setEditedDish] = useState(null);
   const [id, setId] = useState("");
   const [name, setName] = useState("");
@@ -22,8 +23,6 @@ const DishesComponent = ({ dishes = [], editMode }) => {
   const [selectedRestrictions, setSelectedRestrictions] = useState([]);
   const [isNewImageSelected, setIsNewImageSelected] = useState(false);
 
-  
-
   const removeDish = async (id) => {
     try {
       await axios.delete(`/api/dish/${id}`);
@@ -31,6 +30,11 @@ const DishesComponent = ({ dishes = [], editMode }) => {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  const handleDishScreen = (dish) => {
+    setOpenDishScreen(true);
+    setDish(dish);
   }
 
   const editDish = (dish) => {
@@ -47,7 +51,6 @@ const DishesComponent = ({ dishes = [], editMode }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     try {
       const formData = new FormData();
       formData.append("id", id);
@@ -92,6 +95,7 @@ const DishesComponent = ({ dishes = [], editMode }) => {
               <div>
                 <p className="text-white font-bold text-lg">{dish.name}</p>
                 <p className="text-light">{dish.price}€</p>
+                {!editMode && <p className="text-primary cursor-pointer" onClick={() => handleDishScreen(dish)}>See more</p>}
               </div>
               {editMode && (
                 <div className="ml-auto">
@@ -184,6 +188,61 @@ const DishesComponent = ({ dishes = [], editMode }) => {
           </div>
         </div>
       </Modal>
+
+      {/* <Modal open={openDishScreen} setOpen={setOpenDishScreen}>
+        <div className="bg-base-dark rounded-lg border-2 border-base relative">
+          <div style={`relative h-80`}>
+            <img
+              src={`${axios.defaults.baseURL}/api/dish/photo/${dish.photo}`}
+              style={`w-full h-80 absolute`}
+              alt={dish.name}
+            />
+            <button
+              style={`absolute top-5 left-5 z-50 rounded-full bg-[#0000007e]`}
+              onClick={handleBack}
+            >
+              <AntDesign name="arrowleft" size={24} style={tw`text-light m-2`} />
+            </button>
+          </div>
+          <div style={`p-5`}>
+            <p style={`text-4xl text-light font-bold`}>{dish.name}</p>
+            <p style={`text-light font-light text-2xl`}>{dish.price}€</p>
+            <p style={`text-light font-bold text-lg`}>Description: </p>
+            <p style={`text-light font-light text-base`}>{dish.description}</p>
+            <p style={`text-light font-bold text-lg`}>Tastes: </p>
+            <div style={`flex-row flex-wrap gap-2`}>
+              {dish.tastes?.map((taste) => {
+                return (
+                  <Pill
+                    key={taste.id}
+                    text={taste.name}
+                    active={tastes.includes(taste.id)}
+                  />
+                );
+              })}
+              {!dish.tastes || dish.tastes.length === 0 && (
+                <p style={`text-light font-light text-base`}>No tastes set</p>
+              )}
+            </div>
+            <p style={`text-light font-bold text-lg`}>Restrictions: </p>
+            <div style={`flex-row flex-wrap gap-2`}>
+              {dish.restrictions?.map((restriction) => {
+                return (
+                  <Pill
+                    key={restriction.id}
+                    text={restriction.name}
+                    active={restrictions.includes(restriction.id)}
+                  />
+                );
+              })}
+              {!dish.restrictions || dish.restrictions.length === 0 && (
+                <p style={tw`text-light font-light text-base`}>No alimentary restrictions</p>
+              )}
+            </div>
+          </div>
+
+        </div>
+      </Modal> */}
     </>
   );
 };

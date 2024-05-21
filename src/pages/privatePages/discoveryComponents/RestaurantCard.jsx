@@ -52,7 +52,7 @@ export const RestaurantCard = ({ restaurant, goNext }) => {
   };
 
   return (
-    <div className="relative z-50 h-[84%] w-full">
+    <div className="relative z-50 h-[84%] w-full max-w-lg mx-auto">
       <div className="flex-row absolute z-50 h-full w-full">
         <button
           className="z-10 w-20 h-full"
@@ -82,15 +82,15 @@ export const RestaurantCard = ({ restaurant, goNext }) => {
       <div className="absolute top-0 w-full h-30 z-5 opacity-50 gradient-top" />
       <img
         src={restaurant.carousel_photos && `${axios.defaults.baseURL}/api/restaurant/carousel/photo/${restaurant.carousel_photos[activePhoto]}`}
-        className="w-full h-full"
+        className="w-full h-full object-cover"
       />
       <div className="absolute bottom-0 z-5 mb-8 w-full">
         <div className="px-5 pb-2">
           <RestaurantDetails restaurant={restaurant} activePhoto={activePhoto} />
         </div>
-        <div className="flex-row justify-around w-full">
+        <div className="flex justify-around mt-4">
           <button
-            className="bg-base w-20 h-20 items-center justify-center rounded-full z-50"
+            className="bg-base w-20 h-20 flex items-center justify-center rounded-full z-50"
             onClick={() => goNext(false)}
           >
             <img
@@ -99,7 +99,7 @@ export const RestaurantCard = ({ restaurant, goNext }) => {
             />
           </button>
           <button
-            className="bg-base w-20 h-20 items-center justify-center rounded-full z-50"
+            className="bg-base w-20 h-20 flex items-center justify-center rounded-full z-50"
             onClick={() => goNext(true)}
           >
             <img

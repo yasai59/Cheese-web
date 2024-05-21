@@ -51,8 +51,13 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
   }, [restaurantId, restaurants]);
 
   const handleOrderClick = (src) => {
-    window.open(src, "_blank");
+    let url = src;
+    if (!/^https?:\/\//i.test(url)) {
+      url = `http://${url}`;
+    }
+    window.open(url, "_blank", "noopener,noreferrer");
   };
+  
 
   const GlovoBtn = ({ src }) => (
     <button
@@ -115,13 +120,13 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
   if (loading) {
     return <Loading isLoading={true} />;
   }
+  
+  if (!restaurant) {
+    return <div className="text-light text-center">Restaurant not found</div>;
+  }
 
   if (error) {
     return <div className="text-red-500">{error}</div>;
-  }
-
-  if (!restaurant) {
-    return <div className="text-light text-center">Restaurant not found</div>;
   }
 
   return (
@@ -173,6 +178,9 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
           </div>
           <div className="py-4">
             <p>{restaurant.address}</p>
+          </div>
+          <div className="pb-4">
+            <p>{restaurant.phone && restaurant.phone}</p>
           </div>
         </div>
       </div>

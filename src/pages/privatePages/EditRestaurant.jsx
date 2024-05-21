@@ -6,6 +6,7 @@ import DishesComponent from "../../components/DishesComponent";
 import { ImageCarousel } from "../../components/ImageCarousel";
 import { LinkButton } from "../../components/LinkButton";
 import { AddDish } from "./AddDish";
+import { resizeFile } from "../../helpers/resizer";
 
 export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
   const { restaurants, setRestaurants } = useContext(UserContext);
@@ -13,9 +14,9 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
   const restaurant = restaurants.find((restaurant) => restaurant.id == restaurantId);
   const [dishes, setDishes] = useState(restaurant.dishes || []);
   const [url, setUrl] = useState(restaurant.photo || "");
-  const [newImage, setNewImage] = useState(null);
+  const [newImage, setNewImage] = useState(false);
   const [restaurantAddress, setRestaurantAddress] = useState(restaurant.address || "");
-  const [phoneNumber, setPhoneNumber] = useState(restaurant.phone_number || "");
+  const [phoneNumber, setPhoneNumber] = useState(restaurant.phone || "");
   const [glovoLink, setGlovoLink] = useState(restaurant.link_glovo || "");
   const [uberEatsLink, setUberEatsLink] = useState(restaurant.link_uber_eats || "");
   const [justEatLink, setJustEatLink] = useState(restaurant.link_just_eat || "");
@@ -30,6 +31,7 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
           name: img,
           imageUrl: `${axios.defaults.baseURL}/api/restaurant/carousel/photo/${img}`
         })));
+        console.log("Carousel images:", response.data);
       })
       .catch((error) => {
         console.error("Error fetching carousel images:", error);
@@ -46,44 +48,91 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
     input.accept = "image/*";
     input.onchange = async (e) => {
       const file = e.target.files[0];
-      setNewImage(file); // Guardar la nueva imagen en el estado
-      const url = URL.createObjectURL(file);
-      image.current.src = url;
-      setUrl(url);
+      const formData = new FormData();
+      formData.append("photo", file);
+      formData.append("id", restaurant.id);
+      try {
+        await axios.post(
+          `/api/restaurant/photo/profile-picture/${restaurant.id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        const url = URL.createObjectURL(file);
+        image.current.src = url;
+        setNewImage(true);
+        setUrl(url);
+        setNewImageUrl(url);
+        setEdit(false);
+      } catch (error) {
+        console.error(error);
+      }
     };
     input.click();
   };
 
+  
+  const updateImages = async (images) => {
+    console.log("Images:", images);
+    const formDataCarousel = new FormData();
+
+    for (let image of images) {
+        if (!image.imageUrl.includes("http")) {
+          console.log("Resizing image:", image);
+            const resizedImage = await resizeFile(image.resized);
+            formDataCarousel.append("photo", {
+                uri: resizedImage,
+                name: resizedImage.split('/').pop(),
+                type: "image/jpeg", 
+            });
+        } else {
+            console.log("Image already resized:", image.name)
+            formDataCarousel.append("photo", image.name);
+        }
+    }
+    console.log("Data:", formDataCarousel);
+    try {
+        const res = await axios.put(
+            `/api/restaurant/photo/carousel/${restaurant.id}`,
+            formDataCarousel,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
+        console.log("Server response:", res.data);
+    } catch (e) {
+        console.error("Error uploading images:", e);
+    }
+};
+
+
+
   const handleSave = async () => {
     console.log("Handle Save called");
+    const updatedRestaurant = {
+      id: restaurant.id,
+      address: restaurantAddress,
+      phone_number: phoneNumber,
+      link_glovo: glovoLink,
+      link_uber_eats: uberEatsLink,
+      link_just_eat: justEatLink,
+    };
 
-    const formData = new FormData();
-    formData.append("id", restaurant.id);
-    formData.append("address", restaurantAddress);
-    formData.append("phone_number", phoneNumber);
-    formData.append("link_glovo", glovoLink);
-    formData.append("link_uber_eats", uberEatsLink);
-    formData.append("link_just_eat", justEatLink);
-    formData.append("carousel_images", JSON.stringify(carousel.map(img => img.name))); // Guardar como JSON
-    if (newImage) {
-      formData.append("photo", newImage); // Agregar la nueva imagen si existe
-    }
-
-    console.log("FormData Entries:", Array.from(formData.entries()));
+    console.log("Updated data:", updatedRestaurant);
 
     try {
-      const response = await axios.put(`/api/restaurant `, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.put(`/api/restaurant`, updatedRestaurant);
 
       console.log("Save Response:", response.data);
 
-      // Actualiza el estado global de los restaurantes
       setRestaurants((prevRestaurants) =>
         prevRestaurants.map((rest) =>
-          rest.id === restaurant.id ? { ...rest, ...response.data } : rest
+          rest.id === restaurant.id ? { ...rest, ...updatedRestaurant } : rest
         )
       );
 
@@ -141,7 +190,7 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
                 onChange={(e) => setRestaurantAddress(e.target.value)}
               />
             </div>
-            <div className="py-4">
+            <div className="pb-4">
               <input
                 type="tel"
                 value={phoneNumber}
@@ -159,7 +208,7 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
         />
         <div className="flex flex-col gap-2 p-4">
           <label className="text-primary">Carousel</label>
-          <ImageCarousel setDefCarousel={setCarousel} initialImages={carousel} />
+          <ImageCarousel setDefCarousel={updateImages} initialImages={carousel} />
         </div>
         <hr className="border-b-1 border-base-light" />
         <div id="links" className="flex flex-col gap-2 p-4">

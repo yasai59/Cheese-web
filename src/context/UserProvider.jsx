@@ -134,7 +134,7 @@ export const UserProvider = ({ children }) => {
       const arr = [];
 
       res.data.forEach((r) => {
-        if (arr.find((a) => a.id === r.id)) return;
+        if (arr.find((a) => a.id == r.id)) return;
 
         arr.push(r);
       });

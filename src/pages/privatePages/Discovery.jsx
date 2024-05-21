@@ -60,7 +60,7 @@ export const Discovery = () => {
   }
 
   return (
-    <div className="flex-1 h-screen bg-base-dark border-t border-base-light flex flex-col items-center justify-center">
+    <div className="flex-1 h-screen bg-base-dark border-t border-base-light flex flex-col items-center justify-center p-4">
       {restaurants === "No restaurants found" ? (
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-light text-2xl">We ran out of restaurants!</p>

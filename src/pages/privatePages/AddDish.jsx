@@ -43,15 +43,11 @@ export const AddDish = ({ isEditing, restaurantId }) => {
       formData.append("tastes", JSON.stringify(selectedTastes));
       formData.append("restrictions", JSON.stringify(selectedRestrictions));
 
-      console.log(selectedTastes);
-      console.log(selectedRestrictions);
-
       const res = await axios.post(`api/dish/${restaurantId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-
 
       setName("");
       setDescription("");
@@ -59,14 +55,12 @@ export const AddDish = ({ isEditing, restaurantId }) => {
       setPhoto("");
       setSelectedTastes([]);
       setSelectedRestrictions([]);
-      setOpen(false);
       updateRestaurants();
+      setOpen(false);
     } catch (e) {
       console.error(e);
     }
-
   }
-
 
   return (
     <>

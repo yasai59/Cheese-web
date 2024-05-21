@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios"; // Importa Axios
 
 export const LinkButton = ({ src, originalText, onSave }) => {
     const [text, setText] = useState(originalText || ""); 
