@@ -1,4 +1,4 @@
-export const Pill = ({ text, activate = false, onClick = false }) => {
+export const Pill = ({ text, activate = false, onClick = false, className = "" }) => {
   const realClick = (e) => {
     e.stopPropagation();
     if (onClick) {
@@ -8,7 +8,7 @@ export const Pill = ({ text, activate = false, onClick = false }) => {
 
   return (
     <div
-      className={`bg-base w-min h-min p-1 px-3 rounded-full ${
+      className={`bg-base w-min h-min p-1 px-3 rounded-full ${className} ${
         onClick ? "cursor-pointer" : ""
       } text-light select-none ${
         activate &&

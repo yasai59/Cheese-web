@@ -12,6 +12,7 @@ export const PillModalDish = ({
   setSelectedOptions,
   title = "",
   children,
+  className,
 }) => {
   const [innerSelectedOptions, setInnerSelectedOptions] = useState([
     ...selectedOptions,
@@ -40,7 +41,7 @@ export const PillModalDish = ({
     <Modal open={open} setOpen={setOpen}>
       <h3 className="mb-5">{title}</h3>
       {children}
-      <div className="flex flex-wrap gap-2">
+      <div className={`flex flex-wrap gap-2 ${className}`}>
         {options.map((option) => {
           return (
             <Pill
@@ -50,6 +51,7 @@ export const PillModalDish = ({
                 !!innerSelectedOptions.find((lol) => lol.id == option.id)
               }
               onClick={() => handleClick(option)}
+              className="w-fit"
             />
           );
         })}

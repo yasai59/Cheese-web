@@ -206,6 +206,7 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
           editMode={true}
           restaurantId={restaurantId}
         />
+        
         <div className="flex flex-col gap-2 p-4">
           <label className="text-primary">Carousel</label>
           <ImageCarousel setDefCarousel={updateImages} initialImages={carousel} />

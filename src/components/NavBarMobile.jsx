@@ -7,7 +7,7 @@ export const NavBarMobile = () => {
 
   return (
     <>
-      <div className="w-full h-20 z-20"></div>
+      <div className="w-full h-20"></div>
       <div className="h-20 fixed bottom-0 w-full bg-base-dark">
         <nav className="h-full border-t bg-dark-base">
           <ul className="h-full flex justify-around items-center text-white text-2xl">

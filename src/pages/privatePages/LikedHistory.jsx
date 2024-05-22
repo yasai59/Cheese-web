@@ -1,42 +1,45 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import UserContext from '../../context/UserContext';
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-
 
 const Restaurant = ({
   restaurant,
   isFavorite = false,
-  onFavorite = () => { },
-  onClick = () => { },
+  onFavorite = () => {},
+  onClick = () => {},
 }) => {
   const handleFavoriteClick = (e) => {
     e.stopPropagation();
     onFavorite(restaurant);
   };
+
   return (
-      <div 
-        className="bg-base aspect-square rounded-lg p-5 cursor-pointer relative"
-        onClick={onClick}
-      >
-        <div className="absolute top-2 right-2 z-10" onClick={handleFavoriteClick}>
-          {isFavorite ? (
-            <span role="img" aria-label="star" style={{ fontSize: '24px' }}>⭐️</span>
-          ) : (
-            <span role="img" aria-label="star" style={{ fontSize: '24px' }}>☆</span>
-          )}
-        </div>
-        <img
-          src={`${axios.defaults.baseURL}/api/restaurant/profilephoto/${restaurant.photo}`}
-          className="w-16 h-16 rounded-xl mx-auto mt-2"
-          alt={`${restaurant.name} profile`}
-        />
-        <p className="text-lime-50 text-center mt-2">{restaurant.name}</p>
-        <p className="text-lime-50 text-center font-light">{restaurant.address}</p>
+    <div
+      className={`bg-base rounded-lg p-5 cursor-pointer relative flex flex-col justify-center items-center ${
+        window.innerWidth < 640 ? 'w-full' : 'aspect-square'
+      }`}
+      onClick={onClick}
+    >
+      <div className="absolute top-2 right-2" onClick={handleFavoriteClick}>
+        {isFavorite ? (
+          <span role="img" aria-label="star" style={{ fontSize: '24px' }}>
+            ⭐️
+          </span>
+        ) : (
+          <span role="img" aria-label="star" style={{ fontSize: '24px' }}>
+            ☆
+          </span>
+        )}
       </div>
-    
+      <img
+        src={`${axios.defaults.baseURL}/api/restaurant/profilephoto/${restaurant.photo}`}
+        className="w-16 h-16 rounded-xl mx-auto mt-2"
+        alt={`${restaurant.name} profile`}
+      />
+      <p className="text-lime-50 text-center mt-2">{restaurant.name}</p>
+      <p className="text-lime-50 text-center font-light">{restaurant.address}</p>
+    </div>
   );
 };
 
@@ -58,22 +61,23 @@ export const LikedHistory = () => {
   const handleClick = (restaurant) => {
     addRestaurant(restaurant);
     navigate(`/restaurant/${restaurant.id}`);
-  }
+  };
 
   return (
-    <div className="flex-1 bg-base-dark p-3">
-      <h1 className="text-light text-4xl font-bold">Liked Restaurants</h1>
-      <div className="flex mt-5 gap-2 flex-row flex-wrap justify-center">
-        {likedRestaurants && likedRestaurants.map((restaurant) => (
-          <div key={restaurant.id} className="w-64 mx-2 mb-4">
-            <Restaurant
-              restaurant={restaurant}
-              isFavorite={favoriteRestaurants && favoriteRestaurants.some((res) => res.id === restaurant.id)}
-              onFavorite={() => handleFavorite(restaurant)}
-              onClick={() => handleClick(restaurant)}
-            />
-          </div>
-        ))}
+    <div className="flex-1 bg-base-dark py-3">
+      <h1 className="text-light text-4xl font-bold ms-5">Liked Restaurants</h1>
+      <div className="flex mt-5 mb-3 gap-4 flex-row flex-wrap mx-5">
+        {likedRestaurants &&
+          likedRestaurants.map((restaurant) => (
+            <div key={restaurant.id} className="w-full tablet:w-64">
+              <Restaurant
+                restaurant={restaurant}
+                isFavorite={favoriteRestaurants && favoriteRestaurants.some((res) => res.id === restaurant.id)}
+                onFavorite={() => handleFavorite(restaurant)}
+                onClick={() => handleClick(restaurant)}
+              />
+            </div>
+          ))}
       </div>
     </div>
   );

@@ -14,7 +14,7 @@ export const LinkButton = ({ src, originalText, onSave }) => {
     const hasChanges = text !== originalText;
 
     return (
-        <div className="rounded-md py-2 text-white bg-base h-full">
+        <div className="rounded-md py-2 text-white bg-base">
             <div className="flex items-center gap-4">
                 <div id="div-img" className="px-2 border-r-2 border-base-light">
                     <img src={`../../../../../assets/${src}.png`} alt={src} className="h-8 w-8 inline-block" />

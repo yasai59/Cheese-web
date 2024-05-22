@@ -16,10 +16,12 @@ const Restaurant = ({
 
   return (
     <div
-      className="bg-base aspect-square rounded-lg p-5 relative cursor-pointer"
-      onClick={onClick}
+    className={`bg-base rounded-lg p-5 cursor-pointer relative flex flex-col justify-center items-center ${
+      window.innerWidth < 640 ? 'w-full' : 'aspect-square'
+    }`}
+    onClick={onClick}
     >
-      <div className="absolute top-2 right-2 z-10" onClick={handleFavoriteClick}>
+      <div className="absolute top-2 right-2" onClick={handleFavoriteClick}>
         {isFavourite ? (
           <span role="img" aria-label="star" style={{ fontSize: '24px' }}>⭐️</span>
         ) : (
@@ -52,16 +54,16 @@ export const FavoriteRestaurants = () => {
   };
 
   return (
-    <div className="flex-1 bg-base-dark p-3">
-      <h1 className="text-light text-4xl font-bold">Favorite Restaurants</h1>
+    <div className="flex-1 bg-base-dark py-3">
+      <h1 className="text-light text-4xl font-bold ms-5">Favorite Restaurants</h1>
       <input
         type="text"
         placeholder="Search"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="mt-4 bg-base border border-gray-300 rounded-lg py-2 px-4 w-full max-w-sm mx-auto focus:outline-none"
+        className="ms-5 mt-4 bg-base border border-gray-300 rounded-lg py-2 px-4 w-full max-w-sm mx-auto focus:outline-none"
       />
-      <div className="flex mt-5 gap-2 flex-row flex-wrap justify-center">
+      <div className="flex mt-5 mb-3 gap-4 flex-row flex-wrap mx-5">
         {favoriteRestaurants && favoriteRestaurants
           .filter((res) => {
             return (
@@ -70,7 +72,7 @@ export const FavoriteRestaurants = () => {
             );
           })
           .map((restaurant) => (
-            <div key={restaurant.id} className="w-64 mx-2 mb-4">
+            <div key={restaurant.id} className="w-full tablet:w-64">
               <Restaurant
                 restaurant={restaurant}
                 isFavourite={true}

@@ -61,7 +61,7 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
 
   const GlovoBtn = ({ src }) => (
     <button
-      className="bg-primary rounded-2xl py-2 h-14 items-center justify-center w-[70%]"
+      className="bg-primary rounded-2xl py-2 h-14 items-center justify-center w-[70%] tablet:w-64"
       onClick={() => handleOrderClick(src)}
     >
       <img
@@ -74,7 +74,7 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
 
   const UberEatsBtn = ({ src }) => (
     <button
-      className="bg-black rounded-2xl py-2 h-14 items-center justify-center w-[70%]"
+      className="bg-black rounded-2xl py-2 h-14 items-center justify-center w-[70%] tablet:w-64"
       onClick={() => handleOrderClick(src)}
     >
       <img
@@ -87,7 +87,7 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
 
   const JustEatBtn = ({ src }) => (
     <button
-      className="bg-white rounded-2xl py-2 h-14 items-center justify-center w-[70%]"
+      className="bg-white rounded-2xl py-2 h-14 items-center justify-center w-[70%] tablet:w-64"
       onClick={() => handleOrderClick(src)}
     >
       <img
@@ -189,7 +189,10 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
         editMode={false}
         restaurantId={restaurantId}
       />
-      <div className="flex flex-col gap-2 p-4 border-b border-base-light">
+      <div>
+        
+      </div>
+      {/* <div className="flex flex-col gap-2 p-4 border-b border-base-light">
         <label className="text-primary">Carousel</label>
         <div className="flex flex-wrap gap-3">
           {carouselImages.map((image, index) => (
@@ -198,7 +201,7 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
       <div id="links" className="flex flex-col gap-2 p-4">
         <label className="text-primary">Order</label>
         <div className="flex flex-col items-center gap-2">
@@ -222,8 +225,8 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
       </div>
 
       <Modal open={open} setOpen={setOpen}>
-        <div className="bg-base-dark rounded-lg border-2 border-base relative">
-          <h1 className="text-light font-bold text-xl mt-10 text-center">
+        <div className="bg-base-dark rounded-lg border-2 border-base relative p-4">
+          <h1 className="text-light font-bold text-xl my-5 text-center">
             Report
           </h1>
           <p className="text-light mb-2">Please select at least 1 reason</p>
@@ -233,7 +236,7 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
         />
         <p className="text-light mb-2 mt-5">Please describe your problem</p>
         <textarea
-          className="h-30 w-full p-2"
+          className="h-30 w-full p-2 text-light"
           placeholder="Description of your problem"
           value={description}
           onChange={(e) => setDescription(e.target.value)}

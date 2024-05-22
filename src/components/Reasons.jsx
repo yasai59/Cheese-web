@@ -27,10 +27,10 @@ export const Reasons = ({ selectedReasons, setSelectedReasons }) => {
         {reasons && reasons.length > 0 ? (
           <div className="laptop:grid row-start-1 row-end-3 col-start-2">
             <div className="w-full">
-              <div className="flex gap-3 overflow-hidden">
+              <div className="inline-flex gap-3 overflow-hidden items-center">
                 {reasons.map((reason) => {
                   return (
-                    <Pill text={reason.name} activate={true} key={reason.id} />
+                    <Pill text={reason.name} activate={true} key={reason.id} className="w-max"/>
                   );
                 })}
               </div>
@@ -47,6 +47,7 @@ export const Reasons = ({ selectedReasons, setSelectedReasons }) => {
           setSelectedOptions={uploadReasons}
           open={openReasons}
           setOpen={setOpenReasons}
+          className="flex-col"
         />
       </div>
     </>

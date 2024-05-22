@@ -24,6 +24,10 @@ export const AddRestaurant = () => {
             alert('No hay imagen de perfil, no se puede crear el restaurante');
             return;
         }
+        if (carousel.length < 2) {
+            alert('Necesitas al menos 2 fotos para el carrusel');
+            return;
+        }
         const resized = await resizeFile(image);
 
         try {
@@ -112,7 +116,7 @@ export const AddRestaurant = () => {
                 <div className="flex flex-col gap-2">
                     <label className="text-primary text-md" htmlFor="">Your carousel</label>
                     <p className="text-light text-sm"> You need to add at least 2 photos</p>
-                    <ImageCarousel setDefCarousel={setCarousel} />
+                    <ImageCarousel setDefCarousel={setCarousel} initialImages={carousel}/>
                     <p className="text-light mt-3 text-[13px]">
                         To start adding your dishes go to the restaurant page once created
                     </p>
