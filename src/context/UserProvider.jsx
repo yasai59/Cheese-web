@@ -19,7 +19,7 @@ export const UserProvider = ({ children }) => {
   const [reasons, setReasons] = useState([]);
   const [allReasons, setAllReasons] = useState([]);
 
-  axios.defaults.baseURL = "https://apicheese.yasai59.com";
+  axios.defaults.baseURL = "http://localhost:3000";
   useEffect(() => {
     if (!token) return;
 

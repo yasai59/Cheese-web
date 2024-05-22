@@ -76,24 +76,21 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
 
   
   const updateImages = async (images) => {
-    console.log("Images:", images);
-    const formDataCarousel = new FormData();
+    let formDataCarousel = new FormData();
+    const arr = [];
 
     for (let image of images) {
-        if (!image.imageUrl.includes("http")) {
-          console.log("Resizing image:", image);
-            const resizedImage = await resizeFile(image.resized);
-            formDataCarousel.append("photo", {
-                uri: resizedImage,
-                name: resizedImage.split('/').pop(),
-                type: "image/jpeg", 
-            });
-        } else {
-            console.log("Image already resized:", image.name)
-            formDataCarousel.append("photo", image.name);
-        }
+      formDataCarousel.append("photo", image.imageUrl);
+
+    
+      arr.push({
+        uri: image.imageUrl,
+        name: image.imageUrl.split('/').pop(),
+        type: "image/jpeg", 
+      });
+
     }
-    console.log("Data:", formDataCarousel);
+    console.log({hola: arr, ayuda: formDataCarousel.getAll("photo")});
     try {
         const res = await axios.put(
             `/api/restaurant/photo/carousel/${restaurant.id}`,

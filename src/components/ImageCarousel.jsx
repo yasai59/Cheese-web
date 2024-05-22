@@ -18,7 +18,6 @@ const ItemCarousel = ({ image, handleDelete }) => {
 }
 
 export const ImageCarousel = ({ setDefCarousel = () => {}, initialImages = [] }) => {
-    console.log("initialImages", initialImages);
     const [images, setImages] = useState(initialImages);
 
     useEffect(() => {
@@ -26,7 +25,6 @@ export const ImageCarousel = ({ setDefCarousel = () => {}, initialImages = [] })
     }, [initialImages])
 
 
-    console.log("images", images);
 
     const handlePickImage = async (e) => {
         const file = e.target.files[0];
