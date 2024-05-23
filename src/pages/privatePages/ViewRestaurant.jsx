@@ -137,7 +137,7 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
             <h1 className="text-4xl text-light font-bold my-5">
               {restaurant.name}
             </h1>
-            {restaurant.owner_id === user.id ? (
+            {restaurant.owner_id === user.id && setEdit ? (
               <div
                 className="cursor-pointer flex items-center"
                 onClick={() => setEdit(true)}

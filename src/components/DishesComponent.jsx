@@ -8,9 +8,10 @@ import { Restrictions } from "../pages/privatePages/yourRestaurantsComponents/Re
 import { resizeFile } from "../helpers/resizer";
 import UserContext from "../context/UserContext";
 import { Link } from "react-router-dom";
+import { Pill } from "./Pill";
 
 const DishesComponent = ({ dishes = [], editMode }) => {
-  const { updateRestaurants } = useContext(UserContext);
+  const { updateRestaurants, tastes, restrictions } = useContext(UserContext);
   const [open, setOpen] = useState(false);
   const [openDishScreen, setOpenDishScreen] = useState(false);
   const [editedDish, setEditedDish] = useState(null);
@@ -22,6 +23,7 @@ const DishesComponent = ({ dishes = [], editMode }) => {
   const [selectedTastes, setSelectedTastes] = useState([]);
   const [selectedRestrictions, setSelectedRestrictions] = useState([]);
   const [isNewImageSelected, setIsNewImageSelected] = useState(false);
+  const [dish, setDish] = useState(null);
 
   const removeDish = async (id) => {
     try {
@@ -33,8 +35,8 @@ const DishesComponent = ({ dishes = [], editMode }) => {
   }
 
   const handleDishScreen = (dish) => {
-    setOpenDishScreen(true);
     setDish(dish);
+    setOpenDishScreen(true);
   }
 
   const editDish = (dish) => {
@@ -189,60 +191,62 @@ const DishesComponent = ({ dishes = [], editMode }) => {
         </div>
       </Modal>
 
-      {/* <Modal open={openDishScreen} setOpen={setOpenDishScreen}>
-        <div className="bg-base-dark rounded-lg border-2 border-base relative">
-          <div style={`relative h-80`}>
-            <img
-              src={`${axios.defaults.baseURL}/api/dish/photo/${dish.photo}`}
-              style={`w-full h-80 absolute`}
-              alt={dish.name}
-            />
-            <button
-              style={`absolute top-5 left-5 z-50 rounded-full bg-[#0000007e]`}
-              onClick={handleBack}
-            >
-              <AntDesign name="arrowleft" size={24} style={tw`text-light m-2`} />
-            </button>
-          </div>
-          <div style={`p-5`}>
-            <p style={`text-4xl text-light font-bold`}>{dish.name}</p>
-            <p style={`text-light font-light text-2xl`}>{dish.price}€</p>
-            <p style={`text-light font-bold text-lg`}>Description: </p>
-            <p style={`text-light font-light text-base`}>{dish.description}</p>
-            <p style={`text-light font-bold text-lg`}>Tastes: </p>
-            <div style={`flex-row flex-wrap gap-2`}>
-              {dish.tastes?.map((taste) => {
-                return (
-                  <Pill
-                    key={taste.id}
-                    text={taste.name}
-                    active={tastes.includes(taste.id)}
-                  />
-                );
-              })}
-              {!dish.tastes || dish.tastes.length === 0 && (
-                <p style={`text-light font-light text-base`}>No tastes set</p>
-              )}
+      {dish && (
+        <Modal open={openDishScreen} setOpen={setOpenDishScreen} dish={dish}>
+          <div className="bg-base-dark rounded-lg border-2 border-base relative">
+            <div className="relative h-80">
+              <img
+                src={`${axios.defaults.baseURL}/api/dish/photo/${dish.photo}`}
+                className="w-full h-80 absolute"
+                alt={dish.name}
+              />
+              {/* <button
+                style={`absolute top-5 left-5 z-50 rounded-full bg-[#0000007e]`}
+                onClick={handleBack}
+              >
+                <AntDesign name="arrowleft" size={24} style={tw`text-light m-2`} />
+              </button> */}
             </div>
-            <p style={`text-light font-bold text-lg`}>Restrictions: </p>
-            <div style={`flex-row flex-wrap gap-2`}>
-              {dish.restrictions?.map((restriction) => {
-                return (
-                  <Pill
-                    key={restriction.id}
-                    text={restriction.name}
-                    active={restrictions.includes(restriction.id)}
-                  />
-                );
-              })}
-              {!dish.restrictions || dish.restrictions.length === 0 && (
-                <p style={tw`text-light font-light text-base`}>No alimentary restrictions</p>
-              )}
+            <div className="p-5">
+              <p className="text-4xl text-light font-bold">{dish.name}</p>
+              <p className="text-light font-light text-2xl">{dish.price}€</p>
+              <p className="text-light font-bold text-lg">Description: </p>
+              <p className="text-light font-light text-base">{dish.description}</p>
+              <p className="text-light font-bold text-lg">Tastes: </p>
+              <div className="flex-row flex-wrap gap-2">
+                {dish.tastes?.map((taste) => {
+                  return (
+                    <Pill
+                      key={taste.id}
+                      text={taste.name}
+                      activate={tastes.includes(taste.id)}
+                    />
+                  );
+                })}
+                {!dish.tastes || dish.tastes.length === 0 && (
+                  <p className="text-light font-light text-base">No tastes set</p>
+                )}
+              </div>
+              <p className="text-light font-bold text-lg">Restrictions: </p>
+              <div className="flex-row flex-wrap gap-2">
+                {dish.restrictions?.map((restriction) => {
+                  return (
+                    <Pill
+                      key={restriction.id}
+                      text={restriction.name}
+                      active={restrictions.includes(restriction.id)}
+                    />
+                  );
+                })}
+                {!dish.restrictions || dish.restrictions.length === 0 && (
+                  <p className="text-light font-light text-base">No alimentary restrictions</p>
+                )}
+              </div>
             </div>
-          </div>
 
-        </div>
-      </Modal> */}
+          </div>
+        </Modal>
+      )}
     </>
   );
 };

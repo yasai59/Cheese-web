@@ -16,9 +16,7 @@ const Restaurant = ({
 
   return (
     <div
-      className={`bg-base rounded-lg p-5 cursor-pointer relative flex flex-col justify-center items-center ${
-        window.innerWidth < 640 ? 'w-full' : 'aspect-square'
-      }`}
+      className={`bg-base w-full tablet:aspect-square rounded-lg p-5 cursor-pointer relative flex flex-col justify-center items-center`}
       onClick={onClick}
     >
       <div className="absolute top-2 right-2" onClick={handleFavoriteClick}>

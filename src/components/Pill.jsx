@@ -8,7 +8,7 @@ export const Pill = ({ text, activate = false, onClick = false, className = "" }
 
   return (
     <div
-      className={`bg-base w-min h-min p-1 px-3 rounded-full ${className} ${
+      className={`bg-base h-min p-1 px-3 rounded-full ${className ? className : "w-min"} ${
         onClick ? "cursor-pointer" : ""
       } text-light select-none ${
         activate &&

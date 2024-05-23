@@ -7,7 +7,7 @@ export const resizeFile = (file) =>
       800,
       800,
       "JPEG",
-      80,
+      90,
       0,
       (uri) => {
         resolve(uri);

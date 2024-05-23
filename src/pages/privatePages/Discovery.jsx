@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Loading from '../../components/Loading';
 import { RestaurantCard } from './discoveryComponents/RestaurantCard';
-import { LikedHistory } from './LikedHistory';
+import { LikedRestaurants } from './LikedRestaurants';
 
 export const Discovery = () => {
   const [restaurants, setRestaurants] = useState([]);
@@ -54,13 +54,13 @@ export const Discovery = () => {
   if (final) {
     return (
       <div className="flex-1 h-screen bg-base-dark border-t border-base-light">
-        <LikedHistory restaurants={arrLiked} handleNext={handleUpdate} />
+        <LikedRestaurants restaurants={arrLiked} handleNext={handleUpdate} />
       </div>
     );
   }
 
   return (
-    <div className="flex-1 h-screen bg-base-dark border-t border-base-light flex flex-col items-center justify-center p-4">
+    <div className="flex-1 h-screen bg-base-dark border-t border-base-light flex flex-col items-center tablet:justify-center tablet:p-4 overflow-hidden">
       {restaurants === "No restaurants found" ? (
         <div className="flex flex-col items-center justify-center h-full">
           <p className="text-light text-2xl">We ran out of restaurants!</p>
