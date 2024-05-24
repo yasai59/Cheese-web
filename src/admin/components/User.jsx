@@ -1,10 +1,13 @@
 import axios from "axios";
-import React from "react";
+import React, { useContext } from "react";
 import { useState } from "react";
+import UserContext from "../../context/UserContext";
 import { Modal } from "../../components/Modal";
 
 export const User = ({ user = {}, setUser = () => {} }) => {
   const [open, setOpen] = useState(false);
+  const { user: myUser } = useContext(UserContext);
+
   const toggleModal = () => {
     setOpen((prev) => !prev);
   };
@@ -30,6 +33,8 @@ export const User = ({ user = {}, setUser = () => {} }) => {
     const confirm = window.confirm("Are you sure you want to delete the user?");
 
     if (!confirm) return;
+
+    if (myUser.id === user.id) return alert("You can't delete yourself");
 
     axios
       .delete(`/api/user/admin/${user.id}`)
