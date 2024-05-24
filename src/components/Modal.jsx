@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 
-export const Modal = ({ children, open = false, setOpen = () => {} }) => {
+export const Modal = ({ children, open = false, setOpen = () => {} , className = ""}) => {
   const modalRef = React.useRef(null);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export const Modal = ({ children, open = false, setOpen = () => {} }) => {
   return (
     <>
       <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box bg-base-dark">
+        <div className={`modal-box bg-base-dark ${className ? className : ""}`}>
           {children}
           <div className="modal-action">
             <form method="dialog">
