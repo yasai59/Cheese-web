@@ -76,37 +76,34 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
 
   
   const updateImages = async (images) => {
-    let formDataCarousel = new FormData();
-    const arr = [];
+  const formData = new FormData();
 
-    for (let image of images) {
-      formDataCarousel.append("photo", image.imageUrl);
-
-    
-      arr.push({
-        uri: image.imageUrl,
-        name: image.imageUrl.split('/').pop(),
-        type: "image/jpeg", 
-      });
-
+  images.forEach((image) => {
+    if (image.resized) {
+      const fileName = `${Date.now()}_${Math.floor(Math.random() * 10000)}.${image.resized.name.split('.').pop()}`;
+      formData.append('photo', image.resized, fileName);
+    } else if (image.imageUrl) {
+      formData.append('photo', new File([image.imageUrl], image.imageUrl.split('/').pop(), { type: 'image/jpeg' }));
     }
-    console.log({hola: arr, ayuda: formDataCarousel.getAll("photo")});
-    try {
-        const res = await axios.put(
-            `/api/restaurant/photo/carousel/${restaurant.id}`,
-            formDataCarousel,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            }
-        );
-        console.log("Server response:", res.data);
-    } catch (e) {
-        console.error("Error uploading images:", e);
-    }
+  });
+
+  try {
+    const res = await axios.put(
+      `/api/restaurant/photo/carousel/${restaurant.id}`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
+    console.log('Server response:', res.data);
+  } catch (e) {
+    console.error('Error uploading images:', e);
+  }
 };
 
+ 
 
 
   const handleSave = async () => {

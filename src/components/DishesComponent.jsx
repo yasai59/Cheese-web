@@ -3,8 +3,8 @@ import axios from "axios";
 import { Modal } from "./Modal";
 import { Input } from "./Input";
 import { AddPhoto } from "../components/AddPhoto";
-import { Tastes } from "../admin/Tastes";
-import { Restrictions } from "../admin/Restrictions";
+import { Tastes } from "../pages/privatePages/yourRestaurantsComponents/Tastes";
+import { Restrictions } from "../pages/privatePages/yourRestaurantsComponents/Restrictions";
 import { resizeFile } from "../helpers/resizer";
 import UserContext from "../context/UserContext";
 import { Pill } from "./Pill";
@@ -27,7 +27,7 @@ const DishesComponent = ({ dishes = [], editMode }) => {
   useEffect(() => {
     console.log("Tastes:", tastes);
     console.log("Restrictions:", restrictions);
-  }, [tastes, restrictions]);
+  }, []);
 
   const removeDish = async (id) => {
     try {

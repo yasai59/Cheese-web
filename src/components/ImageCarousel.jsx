@@ -19,30 +19,34 @@ const ItemCarousel = ({ image, handleDelete }) => {
 
 export const ImageCarousel = ({ setDefCarousel = () => {}, initialImages = [] }) => {
     const [images, setImages] = useState(initialImages);
+    const [hasChanged, setHasChanged] = useState(false);
 
     useEffect(() => {
         setImages(initialImages);
-    }, [initialImages])
-
-
+    }, [initialImages]);
 
     const handlePickImage = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
         const imageUrl = URL.createObjectURL(file);
         const resized = await resizeFile(file);
-        
-        setImages(prevImages => [...prevImages, { resized, imageUrl }]);
+
+        setImages((prevImages) => [...prevImages, { resized, imageUrl }]);
+        setHasChanged(true);
         e.target.value = null;
     };
 
-    useEffect(() => {
-        setDefCarousel(images);
-    }, [images, setDefCarousel]);
-
     const handleDelete = (imageUri) => {
-        setImages(prevImages => prevImages.filter(img => img !== imageUri));
+        setImages((prevImages) => prevImages.filter((img) => img !== imageUri));
+        setHasChanged(true);
     };
+
+    useEffect(() => {
+        if (hasChanged) {
+            setDefCarousel(images);
+            setHasChanged(false);
+        }
+    }, [images, setDefCarousel, hasChanged]);
 
     return (
         <div className="flex flex-wrap gap-3">

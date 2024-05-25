@@ -10,7 +10,6 @@ export const Tastes = () => {
   const addTasteRef = useRef(null);
 
   useEffect(() => {
-    // Actualizar los gustos seleccionados cuando cambie allTastes
     setSelectedTastes((prevSelectedTastes) =>
       prevSelectedTastes.filter((taste) =>
         allTastes.find((item) => item.id === taste.id)
