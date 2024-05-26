@@ -266,7 +266,7 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
           />
           <p className="text-light mb-2 mt-5">Please describe your problem</p>
           <textarea
-            className="h-30 w-full p-2 text-light"
+            className="h-30 w-full p-2 text-light bg-base"
             placeholder="Description of your problem"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
