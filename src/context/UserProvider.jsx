@@ -41,7 +41,6 @@ export const UserProvider = ({ children }) => {
     });
 
     axios.get("/api/restaurant").then((res) => {
-      console.log(res.data);
       setRestaurants(res.data);
     });
     axios.get("/api/restaurant/favorite-restaurants").then((res) => {
@@ -50,7 +49,6 @@ export const UserProvider = ({ children }) => {
     axios.get("/api/reason/getAll").then((res) => {
       setAllReasons(res.data.reasons);
     });
-    
   }, [token]);
 
   const login = async (username, password) => {
@@ -133,6 +131,8 @@ export const UserProvider = ({ children }) => {
     axios.get("/api/restaurant").then((res) => {
       const arr = [];
 
+      console.log(res);
+
       res.data.forEach((r) => {
         if (arr.find((a) => a.id == r.id)) return;
 
@@ -145,8 +145,8 @@ export const UserProvider = ({ children }) => {
   };
 
   const addRestaurant = (restaurant) => {
-    setRestaurants(prevRestaurants => {
-      const exists = prevRestaurants.some(r => r.id == restaurant.id);
+    setRestaurants((prevRestaurants) => {
+      const exists = prevRestaurants.some((r) => r.id == restaurant.id);
       if (exists) return prevRestaurants;
       return [...prevRestaurants, restaurant];
     });

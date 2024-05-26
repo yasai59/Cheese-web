@@ -7,9 +7,9 @@ import Loading from "../../components/Loading";
 import { Modal } from "../../components/Modal";
 import { Reasons } from "../../components/Reasons";
 
-
 export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
-  const { restaurants, user, favoriteRestaurants, toggleFavorite, reasons } = useContext(UserContext);
+  const { restaurants, user, favoriteRestaurants, toggleFavorite, reasons } =
+    useContext(UserContext);
   const { restaurantId } = useParams();
 
   const [restaurant, setRestaurant] = useState(null);
@@ -21,12 +21,13 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
   const [description, setDescription] = useState("");
   const [open, setOpen] = useState(false);
 
-
   const handleOpen = (isOpen) => {
     setOpen(isOpen);
   };
 
   useEffect(() => {
+    console.log("im upadting because im a good boy");
+
     const fetchRestaurantData = async () => {
       try {
         let restaurantData = restaurants.find(
@@ -35,11 +36,15 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
 
         setRestaurant(restaurantData);
 
-        const carouselResponse = await axios.get(`/api/restaurant/carousel/${restaurantId}`);
-        setCarouselImages(carouselResponse.data.map((img) => ({
-          name: img,
-          imageUrl: `${axios.defaults.baseURL}/api/restaurant/carousel/photo/${img}`
-        })));
+        const carouselResponse = await axios.get(
+          `/api/restaurant/carousel/${restaurantId}`
+        );
+        setCarouselImages(
+          carouselResponse.data.map((img) => ({
+            name: img,
+            imageUrl: `${axios.defaults.baseURL}/api/restaurant/carousel/photo/${img}`,
+          }))
+        );
 
         setLoading(false);
       } catch (error) {
@@ -57,7 +62,6 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
     }
     window.open(url, "_blank", "noopener,noreferrer");
   };
-  
 
   const GlovoBtn = ({ src }) => (
     <button
@@ -120,7 +124,7 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
   if (loading) {
     return <Loading isLoading={true} />;
   }
-  
+
   if (!restaurant) {
     return <div className="text-light text-center">Restaurant not found</div>;
   }
@@ -156,15 +160,43 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
               </div>
             ) : (
               <div className="flex gap-5">
-                <div className="cursor-pointer" onClick={() => toggleFavorite(restaurant)}>
+                <div
+                  className="cursor-pointer"
+                  onClick={() => toggleFavorite(restaurant)}
+                >
                   {favoriteRestaurants.find((r) => r.id === restaurant.id) ? (
-                    <span role="img" aria-label="star" style={{ fontSize: '24px' }}>⭐️</span>
+                    <span
+                      role="img"
+                      aria-label="star"
+                      style={{ fontSize: "24px" }}
+                    >
+                      ⭐️
+                    </span>
                   ) : (
-                    <span role="img" aria-label="star" style={{ fontSize: '24px' }}>☆</span>
+                    <span
+                      role="img"
+                      aria-label="star"
+                      style={{ fontSize: "24px" }}
+                    >
+                      ☆
+                    </span>
                   )}
                 </div>
-                <div className="cursor-pointer flex justify-center items-center" onClick={() => handleOpen(true)}>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="2em" height="2em" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17q.425 0 .713-.288T13 16t-.288-.712T12 15t-.712.288T11 16t.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7t-.712.288T11 8v4q0 .425.288.713T12 13m-2.925 8q-.4 0-.762-.15t-.638-.425l-4.1-4.1q-.275-.275-.425-.638T3 14.926v-5.85q0-.4.15-.762t.425-.638l4.1-4.1q.275-.275.638-.425T9.075 3h5.85q.4 0 .763.15t.637.425l4.1 4.1q.275.275.425.638t.15.762v5.85q0 .4-.15.763t-.425.637l-4.1 4.1q-.275.275-.638.425t-.762.15zm.025-2h5.8l4.1-4.1V9.1L14.9 5H9.1L5 9.1v5.8zm2.9-7" /></svg>
+                <div
+                  className="cursor-pointer flex justify-center items-center"
+                  onClick={() => handleOpen(true)}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="2em"
+                    height="2em"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      fill="currentColor"
+                      d="M12 17q.425 0 .713-.288T13 16t-.288-.712T12 15t-.712.288T11 16t.288.713T12 17m0-4q.425 0 .713-.288T13 12V8q0-.425-.288-.712T12 7t-.712.288T11 8v4q0 .425.288.713T12 13m-2.925 8q-.4 0-.762-.15t-.638-.425l-4.1-4.1q-.275-.275-.425-.638T3 14.926v-5.85q0-.4.15-.762t.425-.638l4.1-4.1q.275-.275.638-.425T9.075 3h5.85q.4 0 .763.15t.637.425l4.1 4.1q.275.275.425.638t.15.762v5.85q0 .4-.15.763t-.425.637l-4.1 4.1q-.275.275-.638.425t-.762.15zm.025-2h5.8l4.1-4.1V9.1L14.9 5H9.1L5 9.1v5.8zm2.9-7"
+                    />
+                  </svg>
                 </div>
               </div>
             )}
@@ -172,7 +204,11 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
           <div className="flex justify-center items-center">
             <img
               className="h-36 w-36 rounded-full object-cover border border-light"
-              src={newImageUrl ? newImageUrl : `${axios.defaults.baseURL}/api/restaurant/profilephoto/${restaurant.photo}`}
+              src={
+                newImageUrl
+                  ? newImageUrl
+                  : `${axios.defaults.baseURL}/api/restaurant/profilephoto/${restaurant.photo}`
+              }
               alt="Restaurant"
             />
           </div>
@@ -189,9 +225,7 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
         editMode={false}
         restaurantId={restaurantId}
       />
-      <div>
-        
-      </div>
+      <div></div>
       {/* <div className="flex flex-col gap-2 p-4 border-b border-base-light">
         <label className="text-primary">Carousel</label>
         <div className="flex flex-wrap gap-3">
@@ -205,9 +239,7 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
       <div id="links" className="flex flex-col gap-2 p-4">
         <label className="text-primary">Order</label>
         <div className="flex flex-col items-center gap-2">
-          {restaurant.link_glovo && (
-            <GlovoBtn src={restaurant.link_glovo} />
-          )}
+          {restaurant.link_glovo && <GlovoBtn src={restaurant.link_glovo} />}
           {restaurant.link_uber_eats && (
             <UberEatsBtn src={restaurant.link_uber_eats} />
           )}
@@ -230,25 +262,25 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
             Report
           </h1>
           <p className="text-light mb-2">Please select at least 1 reason</p>
-        <Reasons
-          selectedReasons={selectedReasons}
-          setSelectedReasons={setSelectedReasons}
-        />
-        <p className="text-light mb-2 mt-5">Please describe your problem</p>
-        <textarea
-          className="h-30 w-full p-2 text-light"
-          placeholder="Description of your problem"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        <button
-          className="bg-primary p-3 rounded-lg my-5 w-1/2 mx-auto"
-          onClick={handleReport}
-        >
-          <span className="text-black text-center font-bold text-xl">
-            Report
-          </span>
-        </button>
+          <Reasons
+            selectedReasons={selectedReasons}
+            setSelectedReasons={setSelectedReasons}
+          />
+          <p className="text-light mb-2 mt-5">Please describe your problem</p>
+          <textarea
+            className="h-30 w-full p-2 text-light"
+            placeholder="Description of your problem"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+          <button
+            className="bg-primary p-3 rounded-lg my-5 w-1/2 mx-auto"
+            onClick={handleReport}
+          >
+            <span className="text-black text-center font-bold text-xl">
+              Report
+            </span>
+          </button>
         </div>
       </Modal>
     </div>

@@ -52,7 +52,6 @@ export const CreateAccount = () => {
         password,
         role_id: restaurantAccount ? 2 : 1,
       });
-      console.log("Registration succesful", res.data);
       login(username, password);
     } catch (err) {
       console.error(err);

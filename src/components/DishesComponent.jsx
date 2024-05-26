@@ -24,11 +24,6 @@ const DishesComponent = ({ dishes = [], editMode }) => {
   const [isNewImageSelected, setIsNewImageSelected] = useState(false);
   const [dish, setDish] = useState(null);
 
-  useEffect(() => {
-    console.log("Tastes:", tastes);
-    console.log("Restrictions:", restrictions);
-  }, []);
-
   const removeDish = async (id) => {
     try {
       await axios.delete(`/api/dish/${id}`);
@@ -36,12 +31,12 @@ const DishesComponent = ({ dishes = [], editMode }) => {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const handleDishScreen = (dish) => {
     setDish(dish);
     setOpenDishScreen(true);
-  }
+  };
 
   const editDish = (dish) => {
     setEditedDish(dish);
@@ -53,7 +48,7 @@ const DishesComponent = ({ dishes = [], editMode }) => {
     setSelectedTastes(dish.tastes);
     setSelectedRestrictions(dish.restrictions);
     setOpen(true);
-  }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -70,30 +65,34 @@ const DishesComponent = ({ dishes = [], editMode }) => {
       formData.append("tastes", JSON.stringify(selectedTastes));
       formData.append("restrictions", JSON.stringify(selectedRestrictions));
 
-      await axios.put(`/api/dish/${editedDish.id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      setOpen(false);
-      updateRestaurants();
+      await axios
+        .put(`/api/dish/${editedDish.id}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then(() => {
+          setOpen(false);
+          updateRestaurants();
+        });
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   return (
     <>
       <div id="dishes" className="flex flex-col border-b border-base-light p-4">
         <label className="text-primary">Dishes</label>
-        {dishes.length === 0 && <p className="text-light text-center">No dishes available</p>}
+        {dishes.length === 0 && (
+          <p className="text-light text-center">No dishes available</p>
+        )}
         <div className="md:grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {dishes.map((dish) => (
             <div key={dish.id} className="flex py-4 gap-4">
               <div>
                 <img
-                  className="h-20 w-20 rounded"
+                  className="h-20 w-20 rounded object-cover"
                   src={`${axios.defaults.baseURL}/api/dish/photo/${dish.photo}`}
                   alt={dish.name}
                 />
@@ -101,11 +100,21 @@ const DishesComponent = ({ dishes = [], editMode }) => {
               <div>
                 <p className="text-white font-bold text-lg">{dish.name}</p>
                 <p className="text-light">{dish.price}€</p>
-                {!editMode && <p className="text-primary cursor-pointer" onClick={() => handleDishScreen(dish)}>See more</p>}
+                {!editMode && (
+                  <p
+                    className="text-primary cursor-pointer"
+                    onClick={() => handleDishScreen(dish)}
+                  >
+                    See more
+                  </p>
+                )}
               </div>
               {editMode && (
                 <div className="ml-auto">
-                  <div onClick={() => removeDish(dish.id)} className="cursor-pointer">
+                  <div
+                    onClick={() => removeDish(dish.id)}
+                    className="cursor-pointer"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="1.5em"
@@ -145,11 +154,7 @@ const DishesComponent = ({ dishes = [], editMode }) => {
           <div className="flex flex-col w-[80%] mx-auto gap-2">
             <div className="flex flex-col">
               <label className="text-light text-sm">Name</label>
-              <Input
-                placeholder="Name"
-                value={name}
-                setValue={setName}
-              />
+              <Input placeholder="Name" value={name} setValue={setName} />
             </div>
             <div className="flex flex-col">
               <label className="text-light text-sm">Description</label>
@@ -189,14 +194,24 @@ const DishesComponent = ({ dishes = [], editMode }) => {
               />
             </div>
             <div className="flex flex-col justify-center items-center">
-              <button className={`h-[40px] w-36 text-base mt-3 mb-5 bg-primary rounded font-bold`} onClick={handleSubmit}>Submit Changes</button>
+              <button
+                className={`h-[40px] w-36 text-base mt-3 mb-5 bg-primary rounded font-bold`}
+                onClick={handleSubmit}
+              >
+                Submit Changes
+              </button>
             </div>
           </div>
         </div>
       </Modal>
 
       {dish && (
-        <Modal open={openDishScreen} setOpen={setOpenDishScreen} dish={dish} className="!max-w-3xl">
+        <Modal
+          open={openDishScreen}
+          setOpen={setOpenDishScreen}
+          dish={dish}
+          className="!max-w-3xl"
+        >
           <div className="bg-base-dark rounded-lg border-2 border-base relative p-5 md:flex md:space-x-5 md:max-w-5xl mx-auto">
             <div className="relative h-80 md:flex-1">
               <img
@@ -209,7 +224,9 @@ const DishesComponent = ({ dishes = [], editMode }) => {
               <p className="text-4xl text-light font-bold">{dish.name}</p>
               <p className="text-light font-light text-2xl">{dish.price}€</p>
               <p className="text-light font-bold text-lg">Description: </p>
-              <p className="text-light font-light text-base">{dish.description}</p>
+              <p className="text-light font-light text-base">
+                {dish.description}
+              </p>
               <p className="text-light font-bold text-lg">Tastes: </p>
               <div className="flex flex-wrap gap-2">
                 {dish.tastes?.map((taste) => (
@@ -220,7 +237,9 @@ const DishesComponent = ({ dishes = [], editMode }) => {
                   />
                 ))}
                 {(!dish.tastes || dish.tastes.length === 0) && (
-                  <p className="text-light font-light text-base">No tastes set</p>
+                  <p className="text-light font-light text-base">
+                    No tastes set
+                  </p>
                 )}
               </div>
               <p className="text-light font-bold text-lg">Restrictions: </p>
@@ -229,11 +248,15 @@ const DishesComponent = ({ dishes = [], editMode }) => {
                   <Pill
                     key={restriction.id}
                     text={restriction.name}
-                    activate={JSON.stringify(restrictions).includes(restriction.id)}
+                    activate={JSON.stringify(restrictions).includes(
+                      restriction.id
+                    )}
                   />
                 ))}
                 {(!dish.restrictions || dish.restrictions.length === 0) && (
-                  <p className="text-light font-light text-base">No alimentary restrictions</p>
+                  <p className="text-light font-light text-base">
+                    No alimentary restrictions
+                  </p>
                 )}
               </div>
             </div>
