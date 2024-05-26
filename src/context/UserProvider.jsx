@@ -9,8 +9,12 @@ export const UserProvider = ({ children }) => {
 
   const [user, setUser] = useState(localUser ? JSON.parse(localUser) : null);
   const [token, setToken] = useState(localStorage.getItem("token") ?? null);
-  const [tastes, setTastes] = useState([]);
-  const [restrictions, setRestrictions] = useState([]);
+  const [tastes, setTastes] = useState(
+    JSON.parse(localStorage.getItem("tastes") ?? "[]")
+  );
+  const [restrictions, setRestrictions] = useState(
+    JSON.parse(localStorage.getItem("restrictions") ?? "[]")
+  );
   const [allTastes, setAllTastes] = useState([]);
   const [allRestrictions, setAllRestrictions] = useState([]);
   const [restaurants, setRestaurants] = useState([]);
@@ -26,10 +30,15 @@ export const UserProvider = ({ children }) => {
     axios.defaults.headers.common["x-token"] = localStorage.getItem("token");
     axios.get("/api/taste").then((res) => {
       setTastes(res.data.tastes);
+      localStorage.setItem("tastes", JSON.stringify(res.data.tastes));
     });
 
     axios.get("/api/restriction").then((res) => {
       setRestrictions(res.data.restrictions);
+      localStorage.setItem(
+        "restrictions",
+        JSON.stringify(res.data.restrictions)
+      );
     });
 
     axios.get("/api/taste/all").then((res) => {

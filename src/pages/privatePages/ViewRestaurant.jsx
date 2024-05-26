@@ -26,8 +26,6 @@ export const ViewRestaurant = ({ setEdit, newImageUrl }) => {
   };
 
   useEffect(() => {
-    console.log("im upadting because im a good boy");
-
     const fetchRestaurantData = async () => {
       try {
         let restaurantData = restaurants.find(

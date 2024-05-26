@@ -6,6 +6,7 @@ import DishesComponent from "../../components/DishesComponent";
 import { ImageCarousel } from "../../components/ImageCarousel";
 import { LinkButton } from "../../components/LinkButton";
 import { AddDish } from "./AddDish";
+import { resizeFile } from "../../helpers/resizer";
 
 export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
   const { restaurants, setRestaurants, user, updateRestaurants } =
@@ -99,16 +100,20 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
   const updateImages = async (images) => {
     const formData = new FormData();
 
-    images.forEach((image) => {
+    for (let image of images) {
       if (image.resized) {
-        const fileName = `${user.username}_${Date.now()}_${Math.floor(
-          Math.random() * 10000
-        )}.${image.resized.name.split(".").pop()}`;
-        formData.append("photo", image.resized, fileName);
+        // const fileName = `${user.username}_${Date.now()}_${Math.floor(
+        //   Math.random() * 10000
+        // )}.${image.resized.name.split(".").pop()}`;
+        formData.append("photo", image.resized);
       } else if (image.imageUrl) {
-        formData.append("photo", image.imageUrl);
+        // get file from the url
+        const file = await fetch(image.imageUrl).then((r) => r.blob());
+        formData.append("photo", file);
+
+        // formData.append("photo", image.imageUrl);
       }
-    });
+    }
 
     try {
       const res = await axios.put(
@@ -137,12 +142,7 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
 
     try {
       const response = await axios.put(`/api/restaurant`, updatedRestaurant);
-
-      setRestaurants((prevRestaurants) =>
-        prevRestaurants.map((rest) =>
-          rest.id === restaurant.id ? { ...rest, ...updatedRestaurant } : rest
-        )
-      );
+      updateRestaurants();
 
       setEdit(false);
     } catch (error) {

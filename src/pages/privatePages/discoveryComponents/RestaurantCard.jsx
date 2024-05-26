@@ -3,10 +3,15 @@ import React, { useState } from "react";
 import { motion, useAnimation } from "framer-motion";
 
 const RestaurantDetails = ({ restaurant, activePhoto }) => {
+  const date = new Date(restaurant.creation_date);
+  const formatedDate = `${date.getDate()}/${
+    date.getMonth() + 1
+  }/${date.getFullYear()}`;
+
   const details = [
     <>
       <h2 className="text-white text-2xl font-bold">{restaurant.name}</h2>
-      <p className="text-white text-lg">{restaurant.address}</p>
+      <p className="text-white text-lg font">{restaurant.address}</p>
     </>,
     <>
       <p className="text-white text-lg">{restaurant.description}</p>
@@ -16,8 +21,7 @@ const RestaurantDetails = ({ restaurant, activePhoto }) => {
         <span className="font-bold">Phone:</span> {restaurant.phone}
       </p>
       <p className="text-white text-lg">
-        <span className="font-bold">In Cheese since:</span>{" "}
-        {restaurant.creation_date}
+        <span className="font-bold">In Cheese since:</span> {formatedDate}
       </p>
     </>,
     <>
@@ -99,20 +103,18 @@ export const RestaurantCard = ({ restaurant, goNext }) => {
             />
           ))}
       </div>
-      <div className="absolute top-0 w-full h-1/3 z-5 bg-gradient-to-b from-black via-transparent opacity-70" />
+      <div className="absolute top-0 w-full h-1/3 z-5 bg-gradient-to-b from-black via-transparent opacity-90" />
       <img
         src={`${axios.defaults.baseURL}/api/restaurant/carousel/photo/${restaurant.carousel_photos[activePhoto]}`}
         className="w-full h-full object-cover"
         alt="restaurant"
         onClick={() => handleChangePhoto(1)}
       />
-      <div className="absolute bottom-0 z-5 mb-8 w-full">
-        <div className="px-5 pb-2">
-          <RestaurantDetails
-            restaurant={restaurant}
-            activePhoto={activePhoto}
-          />
-        </div>
+      <div className="absolute bottom-0 mb-32 w-full z-20 px-5">
+        <RestaurantDetails restaurant={restaurant} activePhoto={activePhoto} />
+      </div>
+      <div className="absolute bottom-0 mb-8 w-full">
+        <div className="px-5 pb-2"></div>
         <div className="flex justify-around mt-4">
           <button
             className="bg-base w-20 h-20 flex items-center justify-center rounded-full z-50"
@@ -136,7 +138,7 @@ export const RestaurantCard = ({ restaurant, goNext }) => {
           </button>
         </div>
       </div>
-      <div className="absolute bottom-0 w-full h-1/2 z-1 bg-gradient-to-t from-black via-transparent opacity-85" />
+      <div className="absolute bottom-0 w-full h-2/3 z-1 bg-gradient-to-t from-black via-transparent" />
     </motion.div>
   );
 };
