@@ -9,7 +9,7 @@ import { AddDish } from "./AddDish";
 import { resizeFile } from "../../helpers/resizer";
 
 export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
-  const { restaurants, setRestaurants } = useContext(UserContext);
+  const { restaurants, setRestaurants, user } = useContext(UserContext);
   const { restaurantId } = useParams();
   const restaurant = restaurants.find((restaurant) => restaurant.id == restaurantId);
   const [dishes, setDishes] = useState(restaurant.dishes || []);
@@ -36,7 +36,7 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
       .catch((error) => {
         console.error("Error fetching carousel images:", error);
       });
-  }, [restaurantId]);
+  }, []);
 
   const handleEdit = () => {
     setEdit(false);
@@ -80,10 +80,11 @@ export const EditRestaurant = ({ setEdit, setNewImageUrl }) => {
 
   images.forEach((image) => {
     if (image.resized) {
-      const fileName = `${Date.now()}_${Math.floor(Math.random() * 10000)}.${image.resized.name.split('.').pop()}`;
+      const fileName = `${user.username}_${Date.now()}_${Math.floor(Math.random() * 10000)}.${image.resized.name.split('.').pop()}`;
       formData.append('photo', image.resized, fileName);
     } else if (image.imageUrl) {
-      formData.append('photo', new File([image.imageUrl], image.imageUrl.split('/').pop(), { type: 'image/jpeg' }));
+      console.log('Image URL:', image.imageUrl);
+      formData.append('photo', image.imageUrl);
     }
   });
 
