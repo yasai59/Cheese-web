@@ -24,6 +24,12 @@ export const Password = () => {
       return;
     }
 
+    if (newPassword.length < 6) {
+      errorRef.current.innerText =
+        "Password must be at least 6 characters long";
+      return;
+    }
+
     axios
       .post("/api/user/change-password", {
         oldPassword,

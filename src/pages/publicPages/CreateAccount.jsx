@@ -40,6 +40,10 @@ export const CreateAccount = () => {
       setError("Passwords don't match");
       return;
     }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      return;
+    }
     if (!acceptTerms) {
       setError("You must accept the terms and conditions");
       return;
@@ -54,7 +58,10 @@ export const CreateAccount = () => {
       });
       login(username, password);
     } catch (err) {
-      console.error(err);
+      if (err.response.data.message === "Error creating the user") {
+        alert("This email is already registered");
+        return;
+      }
       alert(`Registration failed`);
     }
   };

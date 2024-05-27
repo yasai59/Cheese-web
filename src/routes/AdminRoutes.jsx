@@ -14,7 +14,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 export const AdminRoutes = () => {
-  const { logout } = useContext(UserContext);
+  const { logout, token } = useContext(UserContext);
   const navRef = useRef(null);
 
   const toggleNav = () => {
@@ -33,7 +33,7 @@ export const AdminRoutes = () => {
     axios.get("/api/restaurant/getAll").then((res) => {
       setRestaurants(res.data.restaurants);
     });
-  }, []);
+  }, [token]);
 
   return (
     <div className="min-h-screen flex flex-col tablet:flex-row w-full">

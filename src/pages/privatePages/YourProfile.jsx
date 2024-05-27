@@ -14,6 +14,8 @@ export const YourProfile = () => {
   const image = useRef(null);
   const { user, logout, setUser } = useContext(UserContext);
 
+  console.log(user);
+
   const getImage = async () => {
     const res = await fetch(axios.defaults.baseURL + "/api/user/photo", {
       headers: {
@@ -41,7 +43,6 @@ export const YourProfile = () => {
       const file = e.target.files[0];
       const formData = new FormData();
       formData.append("photo", file);
-      formData.append("id", restaurant.id)
       try {
         await axios.post("/api/user/photo", formData, {
           headers: {
@@ -51,8 +52,12 @@ export const YourProfile = () => {
         // Refresh the image after successful upload
         const url = await getImage();
         image.current.style.backgroundImage = `url(${url})`;
+        setUser({
+          ...user,
+          photo: user.id + ".png",
+        });
       } catch (error) {
-        console.error(error + restaurant.id);
+        console.error(error);
       }
     };
     input.click();
@@ -94,6 +99,11 @@ export const YourProfile = () => {
   };
 
   const handleChangeType = () => {
+    if (!user.verified) {
+      alert("You can't change types if you are not verified");
+      return;
+    }
+
     setUser({ ...user, role_id: user.role_id === 1 ? 2 : 1 });
 
     axios.put("/api/user", {

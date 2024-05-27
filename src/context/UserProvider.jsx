@@ -161,11 +161,16 @@ export const UserProvider = ({ children }) => {
     });
   };
 
+  const setUserPersist = (user) => {
+    setUser(user);
+    localStorage.setItem("user", JSON.stringify(user));
+  };
+
   return (
     <UserContext.Provider
       value={{
         user,
-        setUser,
+        setUser: setUserPersist,
         login,
         loginToken,
         token,

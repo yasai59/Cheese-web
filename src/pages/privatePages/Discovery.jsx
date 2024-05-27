@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Loading from '../../components/Loading';
-import { RestaurantCard } from './discoveryComponents/RestaurantCard';
-import { LikedRestaurants } from './LikedRestaurants';
+import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
+import Loading from "../../components/Loading";
+import { RestaurantCard } from "./discoveryComponents/RestaurantCard";
+import { LikedRestaurants } from "./LikedRestaurants";
+import UserContext from "../../context/UserContext";
+import { useNavigate } from "react-router";
 
 export const Discovery = () => {
   const [restaurants, setRestaurants] = useState([]);
@@ -10,19 +12,49 @@ export const Discovery = () => {
   const [final, setFinal] = useState(false);
   const [activeRestaurant, setActiveRestaurant] = useState(0);
   const [update, setUpdate] = useState(false);
+  const [loading, setLoading] = useState(true);
 
+  const navigate = useNavigate();
+
+  const { token, tastes, restrictions } = useContext(UserContext);
+  useEffect(() => {
+    if (!localStorage.getItem("discover")) {
+      if (tastes.length === 0 || restrictions.length === 0) {
+        navigate("/your-profile");
+        localStorage.setItem("discover", true);
+      }
+    }
+  }, []);
+
+  let active = true;
   useEffect(() => {
     setFinal(false);
     setArrLiked([]);
     setActiveRestaurant(0);
     setRestaurants([]);
-    axios.get("/api/restaurant/getRecommendations").then((res) => {
-      if (res.data.recomendations.length === 0) {
-        setRestaurants("No restaurants found");
-      } else {
-        setRestaurants(res.data.recomendations);
-      }
-    });
+    if (token) {
+      setTimeout(() => {
+        active = true;
+      }, 1000);
+      if (!active) return;
+      active = false;
+      axios
+        .get("/api/restaurant/getRecommendations")
+        .then((res) => {
+          setLoading(false);
+          if (res.data.recomendations.length === 0) {
+            if (restaurants.length === 0)
+              setRestaurants("No restaurants found");
+          } else {
+            if (restaurants.length === 0)
+              setRestaurants(res.data.recomendations);
+          }
+        })
+        .catch(() => {
+          setLoading(false);
+          setRestaurants("No restaurants found");
+        });
+    }
   }, [update]);
 
   const handleUpdate = () => {
@@ -66,10 +98,13 @@ export const Discovery = () => {
           <p className="text-light text-2xl">We ran out of restaurants!</p>
           <p className="text-light text-lg">Come tomorrow to see more!</p>
         </div>
-      ) : restaurants.length === 0 ? (
+      ) : loading ? (
         <Loading isLoading={true} />
       ) : (
-        <RestaurantCard restaurant={restaurants[activeRestaurant]} goNext={goNext} />
+        <RestaurantCard
+          restaurant={restaurants[activeRestaurant]}
+          goNext={goNext}
+        />
       )}
     </div>
   );
